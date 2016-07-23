@@ -1,7 +1,7 @@
 package com.benpence.blog.server
 
-import com.benpence.blog.service.ApiService
-import com.benpence.blog.store.InMemoryPostStore
+import com.benpence.blog.service.PostService
+import com.benpence.blog.store.{MemoryPostStore, MemoryUserStore}
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
@@ -21,6 +21,13 @@ class BlogServer extends HttpServer {
       .filter[LoggingMDCFilter[Request, Response]]
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
-      .add(new ApiController(new ApiService(InMemoryPostStore(Set.empty))))
+      .add(
+        new ApiController(
+          new PostService(
+            new MemoryPostStore,
+            new MemoryUserStore
+          )
+        )
+      )
   }
 }

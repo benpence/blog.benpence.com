@@ -1,47 +1,85 @@
 package com.benpence.blog.server
 
-import com.benpence.blog.model.Post
-import com.benpence.blog.service._
-import com.twitter.finagle.http.Request
+import com.benpence.blog.model.{PostId, UserId}
+import com.benpence.blog.service.PostService
 import com.twitter.finagle.http.Response
 import com.twitter.finatra.http.Controller
 import com.twitter.finatra.http.response.ResponseBuilder
-import com.twitter.util.{Future, NonFatal, Return, Throw}
+import com.twitter.util.{Future, NonFatal}
 
-class ApiController(apiService: ApiService) extends Controller {
-  import FutureEnrichments._
+sealed trait ApiResponse[T]
 
-  get("/api/post/all") { _: Request =>
-    apiService 
-      .postAll
+sealed case class Successful[T](results: T) extends ApiResponse[T]
+
+sealed class ApiError(val errors: String*) extends ApiResponse[Nothing]
+case object InternalError extends ApiError("Internal Server Error")
+case class InvalidPostId(id: Long) extends ApiError(s"Invalid post_id: '$id'")
+case class InvalidUserId(id: Long) extends ApiError(s"Invalid user_id: '$id'")
+case class ParameterConstraint(constraint: String) extends ApiError(constraint)
+
+class ApiController(postService: PostService) extends Controller {
+
+  import ApiResponse._
+
+  get("/api/post/most_recent") { request: MostRecentPostsRequest =>
+    postService
+      .mostRecent(request.pageSize, request.page)
+      .map(Successful(_))
       .toResponse(response)
   }
 
-  get("/api/post/id/:id") { request: PostIdRequest =>
-    apiService 
-      .postId(request)
+  get("/api/post/by_author/:user_id") { request: PostsByAuthorRequest =>
+    postService
+      .byAuthor(UserId(request.userId))
+      .map {
+        case Some(apiPosts) => Successful(apiPosts)
+        case None => InvalidUserId(request.userId)
+      }
       .toResponse(response)
   }
 
-  get("/api/post/query/:q") { request: PostQueryRequest =>
-    apiService 
-      .postQuery(request)
+  get("/api/post/by_tag/:tag") { request: PostsByTagRequest =>
+    postService
+      .byTag(request.tag)
+      .map(Successful(_))
+      .toResponse(response)
+  }
+
+  get("/api/post/containing/:queryString") { request: PostsContainingRequest =>
+    postService
+      .containing(request.queryString)
+      .map(Successful(_))
+      .toResponse(response)
+  }
+
+  get("/api/post/by_id/:postId") { request: PostRequest =>
+    postService 
+      .apply(PostId(request.postId))
+      .map {
+        case Some(apiPost) => Successful(apiPost)
+        case None => InvalidPostId(request.postId)
+      }
       .toResponse(response)
   }
 }
 
-object FutureEnrichments {
-  implicit class RichFuture[A](val future: Future[A]) extends AnyVal {
-    // TODO: Fix this type signature to be something like A =:= ApiResponse
-    def toResponse[A <: ApiResponse](implicit response: ResponseBuilder): Future[Response] = {
+object ApiResponse {
+  implicit class ResponseFuture(val future: Future[ApiResponse[_]]) extends AnyVal {
+    // TODO: Figure out how to get ResponseBuilder injected
+    def toResponse(implicit response: ResponseBuilder): Future[Response] = {
       future
+        .handle {
+          case NonFatal(t) => {
+            // logger.error(...)
+            InternalError
+          }
+        }
         .map {
           case s @ Successful(_) => response.ok.json(s)
-          case e: ApiError => response.notFound.json(new ApiError(e.error))
-        }
-        .handle {
-          // TODO: logger.error(t)
-          case NonFatal(e) => response.internalServerError.json(InternalError)
+          case InternalError => response.internalServerError.json(InternalError)
+
+          // TODO: JSON configuration to make this unnecessary?
+          case e: ApiError => response.badRequest.json(new ApiError(e.errors:_*))
         }
     }
   }

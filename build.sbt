@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   "com.twitter.finatra" %% "finatra-http"       % versions.finatra,
   "com.twitter.finatra" %% "finatra-httpclient" % versions.finatra,
   "com.twitter"         %% "finagle-mysql"      % versions.finagle,
-  "com.twitter"         %% "storehaus"          % versions.storehaus,
+  "com.twitter"         %% "storehaus-core"     % versions.storehaus,
   "org.slf4j"           %  "slf4j-api"          % versions.slf4j,
   "org.slf4j"           %  "slf4j-simple"       % versions.slf4j,
 

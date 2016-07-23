@@ -1,35 +1,5 @@
 package com.benpence.blog.store
 
-import com.benpence.blog.model.Post
-import com.twitter.util.Future
-
-trait PostStore {
-  def all: Future[Seq[Post]]
-  def getById(id: String): Future[Option[Post]]
-  def query(query: String): Future[Seq[Post]]
-}
-
-case class InMemoryPostStore(posts: Set[Post]) extends PostStore {
-
-  override def all = {
-    Future.value(posts.toSeq)
-  }
-
-  override def getById(id: String) = {
-    println(s"Returning s${posts.find(_.id == id)}")
-    Future.value(posts.find(_.id == id))
-  }
-
-  override def query(query: String) = {
-    Future.value(posts.toIterator.filter { post =>
-      post.id.contains(query) ||
-        post.title.contains(query) ||
-        post.tags.exists(_.contains(query)) ||
-        post.content.contains(query)
-    }.toList)
-  }
-}
-
 /*import com.twitter.util.{Future, Return, Throw}
 import com.twitter.finagle.exp.mysql
 import com.twitter.finagle.exp.mysql.Parameter._
