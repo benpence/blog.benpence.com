@@ -1,0 +1,21 @@
+package com.benpence.blog.server
+
+import com.twitter.finagle.http.Request
+import com.twitter.finatra.http.Controller
+
+/**
+  * Serves static file content. One of these flags must be set:
+  *   "doc.root"       classpath resources
+  *   "local.doc.root" filesystem resources
+  */
+class StaticController extends Controller {
+
+  get("/") { request: Request =>
+    response.ok.file("index.html")
+  }
+
+  get("/static/:*") { request: Request =>
+    // Responds with Status.NotFound when file is not in JAR/filesystem
+    response.ok.file(request.path)
+  }
+}

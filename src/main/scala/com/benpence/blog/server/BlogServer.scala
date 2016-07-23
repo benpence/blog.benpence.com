@@ -29,5 +29,6 @@ class BlogServer extends HttpServer {
           )
         )
       )
+      .add[StaticController]
   }
 }
