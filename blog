@@ -1,3 +1,25 @@
 #!/bin/bash
-./node_modules/webpack/bin/webpack.js
-sbt 'run com.benpence.blog.server.BlogServerMain'
+WEBPACK="./node_modules/webpack/bin/webpack.js"
+
+bundle() {
+  $WEBPACK -p
+  sbt package
+}
+
+run() {
+  $WEBPACK
+  sbt 'run com.benpence.blog.server.BlogServerMain -doc.root=web'
+}
+
+main() {
+  local command="$1" && shift
+
+  case "$command" in
+    "bundle") bundle ;;
+    "run") run ;;
+    *) echo "Unrecognized command \"$command\""; exit 1 ;;
+  esac
+}
+
+set -eu
+main $@
