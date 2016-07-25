@@ -1,6 +1,6 @@
 package com.benpence.blog.server
 
-import com.twitter.finatra.request.{QueryParam, RouteParam}
+import com.twitter.finatra.request.{ForumParam, QueryParam, RouteParam}
 import com.twitter.finatra.validation.Size
 
 case class MostRecentPostsRequest(
@@ -29,4 +29,15 @@ case class PostsContainingRequest(
 case class PostRequest(
   @RouteParam
   postId: Long
+)
+
+case class NewLoginRequest(
+  @ForumParam
+  csrf: String,
+
+  @ForumParam
+  email: String,
+
+  @ForumParam
+  password: String
 )
