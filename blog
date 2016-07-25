@@ -11,10 +11,32 @@ run() {
   sbt 'run com.benpence.blog.server.BlogServerMain -doc.root=web'
 }
 
+die() {
+  local exit_code="$1" && shift
+  local message="$1" && shift
+
+  echo $message 1>&2
+  exit ${exit_code}
+}
+
+check_dependency() {
+  local command="$1" && shift
+  which "$command" >&- || die 1 "Cannot find '$command' on path"
+}
+
+check_dependencies() {
+  check_dependency npm
+  check_dependency sbt
+  check_dependency scalac
+}
+
 main() {
   local command="$1" && shift
 
+  check_dependencies
+
   case "$command" in
+    "install") npm install ;;
     "bundle") bundle ;;
     "run") run ;;
     *) echo "Unrecognized command \"$command\""; exit 1 ;;
