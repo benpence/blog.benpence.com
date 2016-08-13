@@ -1,6 +1,7 @@
 import { Post }               from './model'
 import { MainRoute }          from './route'
 import { PostsRoute }         from './route'
+import State                  from './state'
 import React                  from 'react'
 import { PropTypes }          from 'react'
 import ReactDOM               from 'react-dom'
@@ -9,6 +10,7 @@ import { hashHistory }        from 'react-router'
 import { Router }             from 'react-router'
 import { Route }              from 'react-router'
 import { IndexRoute }         from 'react-router'
+import Redux                  from 'redux'
 
 var posts = [
   new Post(
@@ -27,17 +29,23 @@ var posts = [
   ),
 ]
 
-var routes = (
-  <Router history = {hashHistory} >
-    <Route path = '/' component = {MainRoute} >
-      <IndexRoute component = {PostsRoute}
-        posts = {posts}
-      />
-    </Route>
-  </Router>
-)
+//const routes = (
+//  <Router history = {hashHistory} >
+//    <Route path = '/' component = {MainRoute} >
+//      <IndexRoute component = {PostsRoute}
+//        posts = {posts}
+//      />
+//    </Route>
+//  </Router>
+//)
+//
+//const render = () => {
+//  ReactDOM.render(
+//    routes,
+//    document.getElementById('app')
+//  )
+//}
 
-ReactDOM.render(
-  routes,
-  document.getElementById('app')
-)
+const store = Redux.createStore(State.reducer)
+store.subscribe(render)
+render()

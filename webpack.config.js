@@ -23,6 +23,10 @@ module.exports = {
           ],
         },
       },
+      //{ test: new RegExp(staticDir),
+      //  exclude: path.join(staticDir, "index.html"),
+      //  loader: "file?name=[path][name].[ext]&context=" + path.join(webDir, frontEndStaticDir),
+      //},
     ],
   },
   output: {
