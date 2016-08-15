@@ -3,7 +3,7 @@ package com.benpence.blog.service
 import com.benpence.blog.model.{ApiUser, ApiPost, Post, PostId, User, UserId}
 import com.benpence.blog.store.{PostQuery, PostStore, UserStore}
 import com.benpence.blog.util.Clock
-import com.benpence.blog.util.FutureEnrichments._
+import com.benpence.blog.util.PrimitiveEnrichments._
 import com.twitter.util.Future
 
 class PostService(

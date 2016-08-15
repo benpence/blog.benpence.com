@@ -6,7 +6,9 @@ scalaVersion := "2.11.7"
 lazy val versions = new {
   val finatra = "2.1.6"
   val finagle = "6.35.0"
+  val jackson = "2.7.2"
   val mockito = "1.8.5"
+  val pegdown = "1.6.0"
   val scalaCheck = "1.12.2"
   val scalaTest = "2.2.4"
   val storehaus = "0.15.0-RC1"
@@ -18,14 +20,18 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.twitter.finatra" %% "finatra-http"       % versions.finatra,
-  "com.twitter.finatra" %% "finatra-httpclient" % versions.finatra,
-  "com.twitter"         %% "finagle-mysql"      % versions.finagle,
-  "com.twitter"         %% "storehaus-core"     % versions.storehaus,
-  "org.slf4j"           %  "slf4j-api"          % versions.slf4j,
-  "org.slf4j"           %  "slf4j-simple"       % versions.slf4j,
+  "com.fasterxml.jackson.core"       %  "jackson-databind"        % versions.jackson,
+  "com.fasterxml.jackson.dataformat" %  "jackson-dataformat-yaml" % versions.jackson,
+  "com.fasterxml.jackson.module"     %% "jackson-module-scala"    % versions.jackson,
+  "com.twitter.finatra"              %% "finatra-http"            % versions.finatra,
+  "com.twitter.finatra"              %% "finatra-httpclient"      % versions.finatra,
+  "com.twitter"                      %% "finagle-mysql"           % versions.finagle,
+  "com.twitter"                      %% "storehaus-core"          % versions.storehaus,
+  "org.pegdown"                      %  "pegdown"                 % versions.pegdown,
+  "org.slf4j"                        %  "slf4j-api"               % versions.slf4j,
+  "org.slf4j"                        %  "slf4j-simple"            % versions.slf4j,
 
-  "org.mockito"         % "mockito-all"         % versions.mockito     % "test",
-  "org.scalacheck"      %% "scalacheck"         % versions.scalaCheck  % "test",
-  "org.scalatest"       %% "scalatest"          % versions.scalaTest   % "test"
+  "org.mockito"                      % "mockito-all"              % versions.mockito     % "test",
+  "org.scalacheck"                   %% "scalacheck"              % versions.scalaCheck  % "test",
+  "org.scalatest"                    %% "scalatest"               % versions.scalaTest   % "test"
 )

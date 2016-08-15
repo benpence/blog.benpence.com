@@ -1,0 +1,6 @@
+- id: 0
+  name: Ben Pence
+  email: ben@example.com
+  passwordHash: password
+  isAdmin: true
+  timeCreatedMillis: 1471202213000

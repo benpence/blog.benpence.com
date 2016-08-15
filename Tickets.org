@@ -1,0 +1,34 @@
+* DOING Read Only Mode Version 1
+** DOING Convert markup language into backend posts at startup
+- JSON/YAML metadata with markdown file posts as JAR resources?
+*** DOING Metadata
+**** DONE Decide metadata format and location?
+CLOSED: [2016-08-14 Sun 22:38]
+I decided to use YAML for now
+- { id: 0,
+    ...
+    content: {
+      location: "resource",
+      url: "com/benpence/blog/posts/blah",
+      encoding: "markdown",
+    },
+  }
+*** DOING Convert markdown resources to posts
+**** DONE Markdown to HTML utility
+CLOSED: [2016-08-14 Sun 10:11]
+**** DOING Read Markdown from resources
+*** TODO Argument parsing library
+** TODO Create posts frontend page
+Shows most recent N posts
+** TODO Individual post page (with permalink)
+** TODO Add search box for listing posts that match query
+* TODO Read Only Mode Version 2
+** TODO Create persistent store
+MySQL or SQLlite. Don't actually add API write path
+*** TODO Research how/if Slick and Twitter Futures work together
+Use Slick for just SQL generation or for DB access?
+
+https://github.com/ikhoon/finatra-mysql-seed/blob/master/src/main/scala/com/github/ikhoon/persistence/slick/user/SlickUserRepository.scala
+https://github.com/slick/slick/blob/master/slick/src/main/scala/slick/jdbc/JdbcBackend.scala#L66
+**** TODO Research how Twitter Future concurrency works
+**** TODO Basic Slick SQL writing utility
