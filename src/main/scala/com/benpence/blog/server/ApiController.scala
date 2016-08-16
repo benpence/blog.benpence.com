@@ -45,14 +45,14 @@ class ApiController(postService: PostService) extends Controller {
       .toResponse(response)
   }
 
-  get("/api/post/containing/:queryString") { request: PostsContainingRequest =>
+  get("/api/post/containing/:query_string") { request: PostsContainingRequest =>
     postService
       .containing(request.queryString)
       .map(Successful(_))
       .toResponse(response)
   }
 
-  get("/api/post/by_id/:postId") { request: PostRequest =>
+  get("/api/post/by_id/:post_id") { request: PostRequest =>
     postService 
       .apply(PostId(request.postId))
       .map {

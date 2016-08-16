@@ -22,7 +22,7 @@ case class PostsByTagRequest(
 )
 
 case class PostsContainingRequest(
-  @QueryParam
+  @RouteParam
   queryString: String
 )
 
