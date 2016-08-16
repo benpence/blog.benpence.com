@@ -8,7 +8,12 @@ bundle() {
 
 run() {
   $WEBPACK
-  sbt 'run com.benpence.blog.server.BlogServerMain -doc.root=web'
+  sbt 'run com.benpence.blog.server.MainBlogServer
+    -file.posts data/posts.yaml
+    -file.users data/users.yaml
+    --
+    -doc.root=web
+    '
 }
 
 die() {

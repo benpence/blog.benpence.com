@@ -13,11 +13,15 @@ I decided to use YAML for now
       encoding: "markdown",
     },
   }
+**** DOING Unit test
 *** DOING Convert markdown resources to posts
 **** DONE Markdown to HTML utility
 CLOSED: [2016-08-14 Sun 10:11]
-**** DOING Read Markdown from resources
+**** DONE Read Markdown from resources
+CLOSED: [2016-08-15 Mon 20:52]
+**** TODO Unit test
 *** TODO Argument parsing library
+**** TODO Unit test
 ** TODO Create posts frontend page
 Shows most recent N posts
 ** TODO Individual post page (with permalink)

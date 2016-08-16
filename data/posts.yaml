@@ -6,8 +6,7 @@
     - spring
     - reborn
   content:
-    location: file
-    url: data/posts/Bloo.md
+    uri: file://data/posts/Bloo.md
     markupLanguage: markdown
 - id: 1
   author: 0
@@ -17,6 +16,5 @@
     - winter
     - beasts
   content:
-    location: file
-    url: data/posts/Blee.md
+    uri: file://data/posts/Blee.md
     markupLanguage: markdown

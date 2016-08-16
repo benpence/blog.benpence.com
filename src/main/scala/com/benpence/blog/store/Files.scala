@@ -6,7 +6,9 @@ import com.benpence.blog.util.PrimitiveEnrichments._
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import scala.util.{Failure, Try, Success}
+import java.util.{List => JList}
+import scala.collection.JavaConverters._
+import scala.util.Try
 
 case class UriParseException(uri: String)
   extends RuntimeException(s"Failed to parse URI '$uri'")
@@ -41,7 +43,7 @@ case class UserDatum(
 object Users {
   /*
    * Expects YAML to be list of
-   * 
+   *
    *   id: 1
    *   name: Ben Pence
    *   email: ben@example.com
@@ -53,8 +55,12 @@ object Users {
     val yamlMapper = new ObjectMapper(new YAMLFactory)
     yamlMapper.registerModule(DefaultScalaModule)
 
-    Try(yamlMapper.readValue(yaml, classOf[Seq[UserDatum]])).map { data =>
-      data.map { datum => 
+    val `type` = yamlMapper.getTypeFactory.constructCollectionType(classOf[JList[_]], classOf[UserDatum])
+    Try {
+      val list: JList[UserDatum] = yamlMapper.readValue(yaml, `type`)
+      list
+    }.map { data =>
+      data.asScala.map { datum =>
         User(
           id = UserId(datum.id),
           name = datum.name,
@@ -71,7 +77,7 @@ object Users {
 object Posts {
   /*
    * Expects YAML to be list of
-   * 
+   *
    *   id: 1
    *   author: 0
    *   title: Winter Coming :)
@@ -106,7 +112,9 @@ object Posts {
   ): Try[Seq[Post]] = {
 
     Try {
-      mapper.readValue(content, classOf[Seq[PostMetaData]])
+      val `type` = mapper.getTypeFactory.constructCollectionType(classOf[JList[_]], classOf[PostMetaData])
+      val list: JList[PostMetaData] = mapper.readValue(content, `type`)
+      list.asScala
 
     }.flatMap { postMetadatas =>
       val postTrys = postMetadatas.map { metadata =>
@@ -115,7 +123,7 @@ object Posts {
             .parseLoaderAndPath(metadata.content.uri)
             .toTry(UriParseException(metadata.content.uri))
           loader <- uriLoaders
-            .get(metadata.content.uri)
+            .get(loaderStr)
             .toTry(UnsupportedException(
               "URI loader",
               metadata.content.uri,

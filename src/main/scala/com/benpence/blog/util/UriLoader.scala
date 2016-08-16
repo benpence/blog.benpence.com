@@ -1,5 +1,6 @@
 package com.benpence.blog.util
 
+import java.io.File
 import scala.io.Source
 import scala.util.Try
 
@@ -37,7 +38,6 @@ case object ResourceLoader extends UriLoader {
 case object FileLoader extends UriLoader {
   override val name = "file"
   override def load(path: String): Try[String] = {
-    // TODO:
-    ???
+    Try(Source.fromFile(new File(path)).mkString)
   }
 }
