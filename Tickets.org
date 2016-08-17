@@ -19,7 +19,7 @@ I decided to use YAML for now
 CLOSED: [2016-08-14 Sun 10:11]
 **** DONE Read Markdown from resources
 CLOSED: [2016-08-15 Mon 20:52]
-**** TODO Unit test
+**** DOING Unit test
 *** TODO Argument parsing library
 **** TODO Unit test
 ** TODO Create posts frontend page

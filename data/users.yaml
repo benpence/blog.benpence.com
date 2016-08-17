@@ -3,4 +3,4 @@
   email: ben@example.com
   passwordHash: password
   isAdmin: true
-  timeCreatedMillis: 1471202213000
+  createdMillis: 1471202213000

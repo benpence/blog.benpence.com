@@ -20,7 +20,7 @@ object UriLoader {
   }
 }
 
-sealed trait UriLoader {
+trait UriLoader {
   def name: String
   def load(path: String): Try[String]
 }

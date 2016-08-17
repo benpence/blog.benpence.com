@@ -14,6 +14,11 @@ sealed trait MarkupLanguage {
   def toHtml(content: String): Try[String]
 }
 
+case object Html extends MarkupLanguage {
+  override val name = "html"
+  override def toHtml(content: String) = Try(content)
+}
+
 case object MarkdownFormat extends MarkupLanguage {
   private val processor = new PegDownProcessor
 
