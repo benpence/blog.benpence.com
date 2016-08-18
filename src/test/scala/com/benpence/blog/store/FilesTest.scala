@@ -32,6 +32,39 @@ class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
   "Users" should {
     "successfully parse Users from YAML" in {
+      val yaml =
+        """|- id: 0
+           |  name: Ben Space
+           |  email: benspace@gmail.com
+           |  passwordHash: Blah88
+           |  isAdmin: true
+           |  createdMillis: 27
+           |- id: 1
+           |  name: Space Ben
+           |  email: spaceben@gmail.com
+           |  passwordHash: Bluh88
+           |  isAdmin: false
+           |  createdMillis: 28""".stripMargin
+
+      val expected = Try(Seq(
+        User(
+          UserId(0),
+          "Ben Space",
+          "benspace@gmail.com",
+          "Blah88",
+          true,
+          27),
+        User(
+          UserId(1),
+          "Space Ben",
+          "spaceben@gmail.com",
+          "Bluh88",
+          false,
+          28)
+      ))
+
+      assert(Users.fromYaml(yaml) === expected)
+
       forAll(arbitrary[UsersTest]) { case UsersTest(users) =>
         val blocks = users.map { user =>
           val User(UserId(id), name, email, pw, isAdmin, createdMillis) = user
@@ -53,6 +86,52 @@ class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
   "Posts" should {
     "successfully parse Posts from YAML and load their contents" in {
+      val yaml = """|- id: 0
+                    |  author: 1
+                    |  title: The Title
+                    |  createdMillis: 27
+                    |  tags:
+                    |    - beef
+                    |    - pools
+                    |  content:
+                    |    uri: memory://first
+                    |    markupLanguage: html
+                    |- id: 1
+                    |  author: 2
+                    |  title: The Title 2
+                    |  createdMillis: 28
+                    |  tags: []
+                    |  content:
+                    |    uri: memory://second
+                    |    markupLanguage: html""".stripMargin
+
+      val loaders = Map("memory" -> MemoryLoader(Map(
+        "first" -> "fist",
+        "second" -> "secnd"
+      )))
+
+      val languages = Map("html" -> Html)
+
+      val expected = Try(Seq(
+        Post(
+          PostId(0),
+          UserId(1),
+          "The Title",
+          27,
+          Set("beef", "pools"),
+          "fist"),
+        Post(
+          PostId(1),
+          UserId(2),
+          "The Title 2",
+          28,
+          Set(),
+          "secnd")
+      ))
+
+      assert(Posts.fromYaml(yaml)(loaders, languages) === expected)
+
+
       forAll(arbitrary[PostsTest]) { case PostsTest(postTests) =>
         val blocksAndFileEntries = postTests.map { case PostTest(path, post) =>
           val Post(PostId(id), UserId(author), title, createdMillis, tags, content) = post
