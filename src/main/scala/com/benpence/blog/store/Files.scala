@@ -37,7 +37,7 @@ case class UserDatum(
   email: String,
   passwordHash: String,
   isAdmin: Boolean,
-  timeCreatedMillis: Long
+  createdMillis: Long
 )
 
 object Users {
@@ -49,7 +49,7 @@ object Users {
    *   email: ben@example.com
    *   passwordHash: password
    *   isAdmin: true
-   *   timeCreatedMillis: 30233038
+   *   createdMillis: 30233038
    */
   def fromYaml(yaml: String): Try[Seq[User]] = {
     val yamlMapper = new ObjectMapper(new YAMLFactory)
@@ -67,7 +67,7 @@ object Users {
           email = datum.email,
           passwordHash = datum.passwordHash,
           isAdmin = datum.isAdmin,
-          timeCreatedMillis = datum.timeCreatedMillis
+          createdMillis = datum.createdMillis
         )
       }
     }

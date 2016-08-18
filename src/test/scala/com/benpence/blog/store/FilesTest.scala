@@ -7,13 +7,14 @@ import java.io.FileNotFoundException
 import org.scalacheck.{Arbitrary, Gen, Prop}
 import org.scalacheck.Arbitrary._
 import org.scalatest.WordSpec
-import org.scalatest.prop.Checkers
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import scala.util.Try
 
 case class UsersTest(users: Seq[User])
 case class PostsTest(postTests: Seq[PostTest])
 case class PostTest(path: String, post: Post)
 
-class FilesTest extends WordSpec with Checkers {
+class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
   import FilesTest._
 
   implicit val arbUsersTest: Arbitrary[UsersTest] = Arbitrary(Gen
@@ -31,56 +32,54 @@ class FilesTest extends WordSpec with Checkers {
 
   "Users" should {
     "successfully parse Users from YAML" in {
-      check[UsersTest, Prop] { case UsersTest(users) =>
+      forAll(arbitrary[UsersTest]) { case UsersTest(users) =>
         val blocks = users.map { user =>
           val User(UserId(id), name, email, pw, isAdmin, createdMillis) = user
 
-          s"""|
-            |- id: $id\n"
-            |  name: $name\n
-            |  email: $email\n
-            |  passwordHash: $pw\n
-            |  isAdmin: $isAdmin\n
-            |  createdMillis $createdMillis
-            |""".stripMargin
+          s"""|- id: $id
+              |  name: $name
+              |  email: $email
+              |  passwordHash: $pw
+              |  isAdmin: $isAdmin
+              |  createdMillis: $createdMillis""".stripMargin
         }
 
         val yaml = blocks.mkString("\n")
 
-        Users.fromYaml(yaml) === users
+        assert(Users.fromYaml(yaml) === Try(users))
       }
     }
   }
 
   "Posts" should {
     "successfully parse Posts from YAML and load their contents" in {
-      check[PostsTest, Prop] { case PostsTest(postTests) =>
+      forAll(arbitrary[PostsTest]) { case PostsTest(postTests) =>
         val blocksAndFileEntries = postTests.map { case PostTest(path, post) =>
           val Post(PostId(id), UserId(author), title, createdMillis, tags, content) = post
 
-          val tagBlock = tags.map("    - " + _).mkString("\n")
+          val tagBlock =
+            if (tags.isEmpty) " []"
+            else tags.map("\n    - " + _).mkString
 
-          val block = s"""|
-            |- id: $id\n
-            |  author: $author\n
-            |  title: $title\n
-            |  createdMillis: $createdMillis\n
-            |  tags:\n$tagBlock\n
-            |  content:\n
-            |  uri: memory://$path\n
-            |  markupLanguage: html
-            |""".stripMargin
+          val block =
+            s"""|- id: $id
+                |  author: $author
+                |  title: $title
+                |  createdMillis: $createdMillis
+                |  tags:$tagBlock
+                |  content:
+                |    uri: memory://$path
+                |    markupLanguage: html""".stripMargin
 
           (block, (path, content))
         }
 
         val yaml = blocksAndFileEntries.map(_._1).mkString("\n")
-
         val pathsToContents = blocksAndFileEntries.map(_._2).toMap
         val loaders = Map("memory" -> MemoryLoader(pathsToContents))
         val languages = Map("html" -> Html)
 
-        Posts.fromYaml(yaml)(loaders, languages) === postTests.map(_.post)
+        assert(Posts.fromYaml(yaml)(loaders, languages) === Try(postTests.map(_.post)))
       }
     }
   }
@@ -111,7 +110,7 @@ object FilesTest {
   implicit val arbPost: Arbitrary[Post] = Arbitrary(for {
     id <- arbitrary[PostId]
     author <- arbitrary[UserId]
-    title <- arbitrary[String]
+    title <- Gen.identifier
     createdMillis <- Gen.posNum[Long]
     tags <- Gen.containerOf[Set, String](Gen.identifier)
     content <- arbitrary[String]

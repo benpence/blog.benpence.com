@@ -38,7 +38,7 @@ object TryUtils {
    */
   def sequence[A](trys: Seq[Try[A]]): Try[Seq[A]] = {
     trys.foldLeft(Try(Seq.empty[A])){
-      case (Success(acc), Success(v)) => Success(v +: acc)
+      case (Success(acc), Success(v)) => Success(acc :+ v)
       case (Success(_),   Failure(t)) => Failure(t)
       case (l,            _         ) => l
     }

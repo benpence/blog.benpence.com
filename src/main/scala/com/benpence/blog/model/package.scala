@@ -7,7 +7,7 @@ case class User(
   email: String,
   passwordHash: String,
   isAdmin: Boolean,
-  timeCreatedMillis: Long
+  createdMillis: Long
 )
 object ApiUser {
   def from(user: User): ApiUser = ApiUser(user.id, user.name)
