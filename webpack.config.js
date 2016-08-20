@@ -1,14 +1,14 @@
 var htmlWebpackPlugin = require('html-webpack-plugin')
 var path = require('path')
 
-var jsxDir = 'src/main/jsx/'
+var jsDir = 'src/main/js/'
 var staticDir = 'src/main/static/'
 var webDir = 'src/main/resources/web/'
 var frontEndStaticDir = 'static/'
 
 module.exports = {
   entry: [
-    path.join(__dirname, jsxDir, 'index.js'),
+    path.join(__dirname, jsDir, 'index.js'),
   ],
   module: {
     loaders: [
