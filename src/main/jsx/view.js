@@ -1,58 +1,34 @@
 import React                  from 'react'
-import { PropTypes }          from 'react'
-import { Button }             from 'react-bootstrap'
-import { ButtonToolbar }      from 'react-bootstrap'
-import * as Styles            from './styles'
+import { intersperse }        from './util'
 
-export const MainView = function(props) {
-  return (
-    <div id = 'main'>
-      <HeaderView />
-      {props.children}
-    </div>
-  )
-}
-MainView.propTypes = {
-  // Components specific to this view
-  children: PropTypes.object.isRequired,
-}
-
-export const HeaderView = function(props) {
-  return (
-    <div id = 'header'  >
-      <ButtonToolbar>
-        <Button active>Posts</Button>
-        <Button       >About</Button>
-      </ButtonToolbar>
-    </div>
-  )
-}
-
-export const PostsView = function(props) {
+export const MostRecentView = function(props) {
   const { posts } = props
+
+  const postViews = posts.map( post => <PostView post = {post} /> )
+  const children = intersperse(postViews, <div className="post-separator" />)
+
   return (
-    <div id = 'home'>
-    {posts.map(function(post) {
-      return (<PostView post = {post} key = {post.id} />)
-    })}
+    <div id = 'most-recent'>
+      {children}
     </div>
   )
-}
-PostsView.propTypes = {
-  // A list of Post objects
-  posts: PropTypes.array.isRequired
 }
 
 export const PostView = function(props) {
   const { post } = props
+
+  const date = post.createdDate
+  const dateString = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
+
   return (
-    <div id = 'entry-{id}'>
-      <div className = "title">{post.title}</div>
-      <div className = "content">{post.content}</div>
+    <div className="post">
+      <p className="title">{post.title}</p>
+      <p>by <a className="author">{post.author.name}</a></p>
+      <p>posted on <span className="date">{dateString}</span></p>
+      <p>tags: {post.tags.map (tag =>
+        <a className="tag">{tag}</a>
+      )}</p>
+      <div className="content">{post.content}</div>
     </div>
   )
-}
-PostView.propTypes = {
-  // A Post object
-  post: PropTypes.object.isRequired
 }

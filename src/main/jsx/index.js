@@ -1,20 +1,13 @@
-import { Post }               from './model'
-import { MainRoute }          from './route'
-import { PostsRoute }         from './route'
-import State                  from './state'
 import React                  from 'react'
-import { PropTypes }          from 'react'
 import ReactDOM               from 'react-dom'
-import ReactRouter            from 'react-router'
-import { hashHistory }        from 'react-router'
-import { Router }             from 'react-router'
-import { Route }              from 'react-router'
-import { IndexRoute }         from 'react-router'
-import Redux                  from 'redux'
+import { Post }               from './model'
+import { User }               from './model'
+import { MostRecentView }     from './view'
 
 var posts = [
   new Post(
     "abc",
+    new User(0, "ben"),
     "How I Met Your String",
     new Date(87987989),
     ["mother", "how"],
@@ -22,6 +15,7 @@ var posts = [
   ),
   new Post(
     "def",
+    new User(0, "ben"),
     "How I Met Your Father",
     new Date(879879888),
     ["father", "how"],
@@ -29,23 +23,7 @@ var posts = [
   ),
 ]
 
-//const routes = (
-//  <Router history = {hashHistory} >
-//    <Route path = '/' component = {MainRoute} >
-//      <IndexRoute component = {PostsRoute}
-//        posts = {posts}
-//      />
-//    </Route>
-//  </Router>
-//)
-//
-//const render = () => {
-//  ReactDOM.render(
-//    routes,
-//    document.getElementById('app')
-//  )
-//}
-
-const store = Redux.createStore(State.reducer)
-store.subscribe(render)
-render()
+ReactDOM.render(
+  <MostRecentView posts = {posts} />,
+  document.getElementById('app')
+)
