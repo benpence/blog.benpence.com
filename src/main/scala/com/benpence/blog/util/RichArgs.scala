@@ -6,7 +6,7 @@ import java.io.File
 import scala.util.Try
 
 case class FailedValidationException(key: String, format: String, t: Throwable)
-  extends RuntimeException(s"Expected argument --$key to be of '$format.", t)
+  extends RuntimeException(s"Expected argument --$key to be of '$format'", t)
 
 object ArgsEnrichments {
   implicit class RichArgs(val args: Args) extends AnyVal {
