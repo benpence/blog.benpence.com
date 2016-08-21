@@ -1,9 +1,7 @@
 import React                  from 'react'
 import { intersperse }        from './util'
 
-export const MostRecentView = function(props) {
-  const { posts } = props
-
+export const MostRecentView = function({posts}) {
   const postViews = posts.map( post => <PostView post = {post} /> )
   const children = intersperse(postViews, <div className="post-separator" />)
 
@@ -14,9 +12,7 @@ export const MostRecentView = function(props) {
   )
 }
 
-export const PostView = function(props) {
-  const { post } = props
-
+export const PostView = function({post}) {
   const date = post.createdDate
   const dateString = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
 
