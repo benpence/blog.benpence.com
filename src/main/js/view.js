@@ -28,7 +28,7 @@ export const PostView = function(props) {
       <p>tags: {post.tags.map (tag =>
         <a className="tag">{tag}</a>
       )}</p>
-      <div className="content">{post.content}</div>
+      <div className="content" dangerouslySetInnerHTML={ {__html: post.content } } />
     </div>
   )
 }

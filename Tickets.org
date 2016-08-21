@@ -36,7 +36,9 @@ Shows most recent N posts
 *** DONE Create layout in react from static posts content
 CLOSED: [2016-08-20 Sat 12:10]
 Use Scala PostApi as Post object template
-*** TODO Connect layout to server API
+*** DONE Connect layout to server API
+CLOSED: [2016-08-20 Sat 18:35]
+*** TODO Make initial API call asynchronous
 *** TODO Create redux and pass reducer down to posts
 *** TODO Create events
 **** most-recent: event that shows N most recent
@@ -44,6 +46,7 @@ Use Scala PostApi as Post object template
 **** by-author: event that shows N most recent by author
 *** TODO Make most-recent event active on page load
 *** TODO Add unit tests against most-recent, single, by-author events
+**** TODO Add unit test for utility function as prototype
 **** TODO State changes
 **** TODO React most-recent state (most-recent)
 ** TODO Individual post page (with permalink)
@@ -53,6 +56,7 @@ Use Scala PostApi as Post object template
 *** TODO Add revision number for posts, UI, API
 Use "The Title: Revision 1.md" and "The Title: Revision 2.md" or something similar
 *** TODO Blog Server feature tests
+*** TODO Investigate if dangerouslySetInnerHTML is risky for remote content
 * TODO Read Only Mode Version 2
 ** TODO Create persistent store
 MySQL or SQLlite. Don't actually add API write path
