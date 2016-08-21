@@ -38,7 +38,8 @@ CLOSED: [2016-08-20 Sat 12:10]
 Use Scala PostApi as Post object template
 *** DONE Connect layout to server API
 CLOSED: [2016-08-20 Sat 18:35]
-*** TODO Make initial API call asynchronous
+*** DONE Make initial API call asynchronous
+CLOSED: [2016-08-21 Sun 12:17]
 *** TODO Create redux and pass reducer down to posts
 *** TODO Create events
 **** most-recent: event that shows N most recent
@@ -57,6 +58,7 @@ CLOSED: [2016-08-20 Sat 18:35]
 Use "The Title: Revision 1.md" and "The Title: Revision 2.md" or something similar
 *** TODO Blog Server feature tests
 *** TODO Investigate if dangerouslySetInnerHTML is risky for remote content
+*** TODO Investigate [[https://gitcandy.com/Repository/Commit/jQuery/ce8a24b52653b77492e5c9d382e47caf7ce658f][Synchronous AJAX Failures]]
 * TODO Read Only Mode Version 2
 ** TODO Create persistent store
 MySQL or SQLlite. Don't actually add API write path
