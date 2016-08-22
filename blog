@@ -1,5 +1,5 @@
 #!/bin/bash
-WEBPACK="./node_modules/webpack/bin/webpack.js"
+WEBPACK="./node_modules/.bin/webpack"
 
 bundle() {
   $WEBPACK -p

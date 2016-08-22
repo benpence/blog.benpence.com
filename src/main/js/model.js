@@ -1,3 +1,5 @@
+import Immutable              from 'immutable'
+
 export class User {
   constructor(id, name) {
     this.id = id
@@ -11,7 +13,7 @@ export class Post {
     this.author = author
     this.title = title
     this.createdDate = createdDate
-    this.tags = tags
+    this.tags = Immutable.Set(tags)
     this.content = content
   }
 }
