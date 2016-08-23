@@ -1,13 +1,19 @@
 #!/bin/bash
-WEBPACK="./node_modules/.bin/webpack"
+ELM_MAKE="./node_modules/.bin/elm-make"
 
-bundle() {
-  $WEBPACK -p
+frontend_package() {
+  cp src/main/static/index.html src/main/resources/web/
+  $ELM_MAKE src/main/elm/Main.elm --output src/main/resources/web/static/index.js
+}
+
+package() {
+  frontend_package
   sbt package
 }
 
 run() {
-  $WEBPACK
+  frontend_package
+
   sbt 'run com.benpence.blog.server.MainBlogServer
     -file.posts data/posts.yaml
     -file.users data/users.yaml
@@ -30,7 +36,6 @@ check_dependency() {
 }
 
 check_dependencies() {
-  check_dependency npm
   check_dependency sbt
   check_dependency scalac
 }
@@ -42,7 +47,7 @@ main() {
 
   case "$command" in
     "install") npm install ;;
-    "bundle") bundle ;;
+    "package") package ;;
     "run") run ;;
     *) echo "Unrecognized command \"$command\""; exit 1 ;;
   esac
