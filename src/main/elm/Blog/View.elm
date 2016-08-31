@@ -1,39 +1,106 @@
-module Blog.View exposing (..)
+module Blog.View exposing (Content(..), Event(..), view)
 
-import Blog.Message exposing ( Message )
-import Blog.Model exposing ( Post, User )
-import Blog.State exposing ( State, State( InitialState, MostRecent ) )
-import Html exposing ( Html, a, div, p, span, text )
+import Blog.Header exposing ( Header )
+import Blog.Types exposing ( Post, PostId )
+import Blog.Tag exposing ( Tag )
+import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput )
 
-view : State -> Html Message
-view state = case state of
-    InitialState        -> div [] []
-    MostRecent posts -> viewPosts posts
+import Blog.Header           as Header
+import Html.App              as Html
+import Blog.Posts            as Posts
+import Blog.Tag              as Tag 
 
-viewPosts : List Post -> Html Message
-viewPosts posts = div [class "most-recent"] (List.map viewPost posts)
+type Content
+    = Empty
+    | PostsContent
+        { searchTerms : String
+        , posts : List Post
+        }
+    | TagContent
+        { tag : Tag
+        , posts : List Post
+        }
+    | TagsContent (List (Tag, Int))
+    | AboutContent
+        { content : String
+        }
 
-viewPost : Post -> Html Message
-viewPost post =
-    div [class "post"] [
-        p [class "post-title"] [text post.title],
-        p [class "post-by"] [
-            text "by ",
-            viewAuthor post.author
-        ],
-        p [class "post-on"] [
-            text "posted on ",
-            span [class "post-date"] [text (toString post.createdMillis)]
-        ],
-        p [class "post-tags"] (List.map viewTag post.tags),
-        div [class "post-content"] [text post.content]
+type Event
+    = ShowPosts
+        { searchTerms : String
+        }
+    | ShowPost 
+        { postId : PostId
+        }
+    | ShowTag
+        { tag : Tag
+        }
+    | ShowTags
+    | ShowAbout
+
+view : Content -> Html Event
+view content =
+    div [class "app container-fluid"] [
+        Html.map fromHeaderEvent (Header.view (toHeader content)),
+        viewBody content 
     ]
 
+toHeader : Content -> Header
+toHeader content = case content of 
+    Empty -> Header.SearchTerms ""
 
-viewAuthor : User -> Html Message
-viewAuthor user = a [class "post-author"] [text user.name]
+    (PostsContent { searchTerms }) ->
+        if searchTerms == "" then Header.Selected Header.postsButton
+        else Header.SearchTerms searchTerms
 
-viewTag : String -> Html Message
-viewTag tag = a [class "post-tag"] [text tag]
+    (TagContent _) -> Header.SearchTerms ""
+
+    (TagsContent _) -> Header.Selected Header.tagsButton
+
+    (AboutContent _) -> Header.Selected Header.aboutButton
+
+fromHeaderEvent : Header.Event -> Event
+fromHeaderEvent event = case event of
+    (Header.Clicked button) ->
+        if      button == Header.postsButton then ShowPosts { searchTerms = "" }
+        else if button == Header.tagsButton  then ShowTags
+        else                                      ShowAbout
+
+    (Header.NewSearchTerms searchTerms) -> ShowPosts { searchTerms = searchTerms }
+    
+viewBody : Content -> Html Event
+viewBody content = case content of
+    Empty -> div [] []
+
+    (PostsContent { searchTerms, posts }) -> singleRowCol [
+        div [class "posts"] [
+            Html.map fromPostsEvent (Posts.view posts)
+        ]
+    ]
+
+    (TagContent { tag, posts }) -> singleRowCol [
+        div [class "tag-heading"] [text tag.name],
+        Html.map fromPostsEvent (Posts.view posts)
+    ]
+
+    (TagsContent tags) ->  singleRowCol [
+        div [class "tag-list list-group"] [
+          Html.map fromTagEvent (Tag.viewCounts tags)
+        ]
+    ]
+
+    -- TODO: Render About content
+    (AboutContent { content }) -> singleRowCol [text content]
+
+fromPostsEvent : Posts.Event -> Event
+fromPostsEvent event = case event of
+    (Posts.PostClicked postId) -> ShowPost { postId = postId }
+    (Posts.TagClicked tag) -> ShowTag { tag = tag }
+
+fromTagEvent : Tag.Event -> Event
+fromTagEvent (Tag.Clicked tag) = ShowTag { tag = tag }
+
+singleRowCol : List (Html a) -> Html a
+singleRowCol content = div [class "row"] [div [class "col-lg-12"] content]

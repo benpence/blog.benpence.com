@@ -36,16 +36,8 @@ Shows most recent N posts
 *** DONE Create layout in elm from static posts content
 CLOSED: [2016-08-22 Mon 21:12]
 Use Scala PostApi as Post object template
-*** DONE Connect layout to server API
-CLOSED: [2016-08-22 Mon 21:12]
-*** TODO Create redux and pass reducer down to posts
-*** TODO Create events
-**** most-recent: event that shows N most recent
-**** single: event that shows single a selected post
-**** by-author: event that shows N most recent by author
-*** TODO Make most-recent event active on page load
-*** TODO Add unit tests against most-recent, single, by-author events
-**** TODO Add unit test for utility function as prototype
+*** DOING Connect layout to server API
+*** TODO Add unit tests against events
 **** TODO State changes
 **** TODO React most-recent state (most-recent)
 ** TODO Individual post page (with permalink)

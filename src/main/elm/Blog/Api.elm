@@ -1,23 +1,47 @@
 module Blog.Api exposing ( Client, remoteClient )
 
-import Blog.Message exposing ( Message, Message( FetchFail, FetchSucceed ) )
+import Blog.Types exposing ( Page, Post )
+import Task exposing ( Task )
 
 import Blog.Decode           as Decode
 import                          Http
 import Json.Decode           as Json
-import                          Task
 
-type alias Client = {
-    fetchMostRecentPosts : Int -> Cmd Message
+type Error a
+    = InputError String
+    | ClientError a
+
+type alias Client a = {
+    fetchPosts : String -> Task (Error a) (List Post)
 }
 
-remoteClient : String -> Client
-remoteClient apiUriBase =
-  let
-    url = apiUriBase ++ "/" ++ mostRecentPath
-    decodeResponse = Json.at ["results"] (Json.list Decode.post)
-    task qty = Task.perform FetchFail FetchSucceed (Http.get decodeResponse (url ++ "?page_size=" ++ (toString qty) ++ "&page=0"))
-  in
-    { fetchMostRecentPosts = task }
+remoteClient : Client Http.Error
+remoteClient = { fetchPosts = remoteFetchPosts }
 
-mostRecentPath = "post/most_recent"
+-- TODO: Search terms
+remoteFetchPosts : String -> Task Error (List Post)
+remoteFetchPosts searchTerms =
+  let
+    url = remotePostsUrl { page = 1, pageSize = 10 }
+    decode = decodeResponse (Json.list Decode.post)
+  in
+     Http.get decode url 
+
+remotePostsUrl : Page -> String
+remotePostsUrl page =
+    Http.url mostRecentRemotePath [
+        ("page", toString page.page),
+        ("page_size", toString page.pageSize)
+    ]
+
+mostRecentRemotePath = "/api/post/most_recent"
+
+decodeResponse : Json.Decoder a -> Json.Decoder a
+decodeResponse = Json.at ["results"]
+
+
+memoryClient : List Post -> List (Tag, Int) -> Client ()
+memoryClient tags posts = {
+
+memoryFetchPosts : String -> Task (Error ()) (List Post)
+memoryFetchPosts = 

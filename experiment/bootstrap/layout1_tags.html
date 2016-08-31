@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- For bootstrap rendering and touch zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>blog.benpence.com</title>
+  </head>
+  <body>
+    <link rel=StyleSheet href="css/bootstrap.min.css" type="text/css" media=screen>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Open Sans', sans-serif;
+      }
+
+      .search-box {
+        display: table;
+      }
+
+      .tag-list-tag {
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+    </style>
+
+
+    <div class="app container-fluid">
+
+      <nav class="row navbar navbar-default">
+          <div class="navbar-header">
+            <ul class="header nav navbar-nav">
+
+              <li><a href="layout1_posts.html">Posts</a></li>
+
+              <li class="active"><a>Tags</a></li>
+            
+              <li><a>About</a></li>
+            </ul>
+          </div>
+
+          <form class="navbar-form">
+            <div class="form-group" style="display:inline;">
+              <div class="input-group" style="display:table;">
+                <span class="input-group-addon" style="width:1%;"><span class="glyphicon glyphicon-search"></span></span>
+                <input type="text" class="search-box form-control" placeholder="Search for posts" aria-describedby="basic-addon1">
+              </div>
+            </div>
+          </form>
+
+      </nav>
+
+      <div class="row">
+
+        <div class="col-lg-12">
+          <div class="tag-list list-group">
+            <button class="tag-list-tag list-group-item">Alpha <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item">Beta <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item">Caterina Flaz <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item">Drudgery <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item active">How To Be An Adult <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item">Mixing Pot <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item">Noman <span class="tag-count">(42)</span></button>
+            <button class="tag-list-tag list-group-item">Zezezeze <span class="tag-count">(42)</span></button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer row" />
+    </div>
+  </body>
+</html>

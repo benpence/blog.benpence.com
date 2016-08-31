@@ -2,7 +2,6 @@
 ELM_MAKE="./node_modules/.bin/elm-make"
 
 frontend_package() {
-  cp src/main/static/index.html src/main/resources/web/
   $ELM_MAKE src/main/elm/Main.elm --output src/main/resources/web/static/index.js
 }
 
@@ -18,7 +17,7 @@ run() {
     -file.posts data/posts.yaml
     -file.users data/users.yaml
     --
-    -doc.root=web
+    -local.doc.root=src/main/resources/web/
     '
 }
 
