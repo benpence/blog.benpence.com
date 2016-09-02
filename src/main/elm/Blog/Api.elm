@@ -1,47 +1,104 @@
 module Blog.Api exposing ( Client, remoteClient )
 
 import Blog.Types exposing ( Page, Post )
+import Blog.Tag exposing ( Tag )
 import Task exposing ( Task )
 
 import Blog.Decode           as Decode
 import                          Http
 import Json.Decode           as Json
+import                          Result
+import                          Task
 
-type Error a
-    = InputError String
-    | ClientError a
-
-type alias Client a = {
-    fetchPosts : String -> Task (Error a) (List Post)
+type alias Client = {
+    fetchPosts : String -> Page -> Task String (List Post),
+    fetchByTag : Tag -> Page -> Task String (List Post)
 }
 
-remoteClient : Client Http.Error
-remoteClient = { fetchPosts = remoteFetchPosts }
+-- TODO: Make decoder injectable
+remoteClient : Client
+remoteClient = {
+    fetchPosts = remoteFetchPosts,
+    fetchByTag = remoteByTag
+  }
 
--- TODO: Search terms
-remoteFetchPosts : String -> Task Error (List Post)
-remoteFetchPosts searchTerms =
+remoteFetchPosts : String -> Page -> Task String (List Post)
+remoteFetchPosts searchTerms page =
+    if searchTerms == "" then remoteMostRecent page
+    else remoteContaining searchTerms page
+
+remoteMostRecent : Page -> Task String (List Post)
+remoteMostRecent page =
   let
-    url = remotePostsUrl { page = 1, pageSize = 10 }
+    url = remoteMostRecentUrl page
+    decode : String -> Result String (List Post)
     decode = decodeResponse (Json.list Decode.post)
   in
-     Http.get decode url 
+     toString
+         `Task.mapError` Http.getString url
+         `Task.andThen` (Task.fromResult << decode)
 
-remotePostsUrl : Page -> String
-remotePostsUrl page =
-    Http.url mostRecentRemotePath [
+remoteMostRecentUrl : Page -> String
+remoteMostRecentUrl page =
+    Http.url remoteMostRecentPath [
         ("page", toString page.page),
         ("page_size", toString page.pageSize)
     ]
 
-mostRecentRemotePath = "/api/post/most_recent"
+remoteMostRecentPath = "/api/post/most_recent"
 
-decodeResponse : Json.Decoder a -> Json.Decoder a
-decodeResponse = Json.at ["results"]
+remoteContaining : String -> Page -> Task String (List Post)
+remoteContaining searchTerms page =
+  let
+    url = remoteContainingUrl searchTerms page
+    decode = decodeResponse (Json.list Decode.post)
+  in
+     toString
+         `Task.mapError` Http.getString url
+         `Task.andThen` (Task.fromResult << decode)
 
+remoteContainingUrl : String -> Page -> String
+remoteContainingUrl searchTerms page =
+  let
+    suffix = Http.uriEncode searchTerms
+  in
+    -- TODO: Move query over to param
+    -- TODO: Page
+    Http.url (remoteContainingPath ++ "/" ++ suffix) [
+    ]
 
-memoryClient : List Post -> List (Tag, Int) -> Client ()
-memoryClient tags posts = {
+remoteContainingPath = "/api/post/containing"
 
-memoryFetchPosts : String -> Task (Error ()) (List Post)
-memoryFetchPosts = 
+remoteByTag : Tag -> Page -> Task String (List Post)
+remoteByTag tag page =
+  let
+    url = remoteByTagUrl tag page
+    decode = decodeResponse (Json.list Decode.post)
+  in
+     toString
+         `Task.mapError` Http.getString url
+         `Task.andThen` (Task.fromResult << decode)
+
+remoteByTagUrl : Tag -> Page -> String
+remoteByTagUrl tag page =
+  let
+    suffix = Http.uriEncode tag.name
+  in
+    -- TODO: Move tag over to param
+    -- TODO: Page
+    Http.url (remoteByTagPath ++ "/" ++ suffix) [
+    ]
+
+remoteByTagPath = "/api/post/by_tag"
+
+decodeResponse : Json.Decoder a -> String -> Result String a
+decodeResponse decoder input =
+  let
+    successes = Json.decodeString (Json.at ["results"] decoder) input
+    errors input =
+        Json.decodeString (Json.at ["errors"] (Json.list Json.string)) input
+            `Result.andThen` (Err << toString)
+  in
+    case successes of
+        Ok results -> Ok results
+        Err _ -> errors input

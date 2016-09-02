@@ -14,29 +14,29 @@ import Blog.Tag              as Tag
 
 type Content
     = Empty
-    | PostsContent
-        { searchTerms : String
-        , posts : List Post
-        }
-    | TagContent
-        { tag : Tag
-        , posts : List Post
-        }
+    | PostsContent {
+        searchTerms : String,
+        posts : List Post
+    }
+    | TagContent {
+        tag : Tag,
+        posts : List Post
+    }
     | TagsContent (List (Tag, Int))
-    | AboutContent
-        { content : String
-        }
+    | AboutContent {
+        content : String
+    }
 
 type Event
-    = ShowPosts
-        { searchTerms : String
-        }
-    | ShowPost 
-        { postId : PostId
-        }
-    | ShowTag
-        { tag : Tag
-        }
+    = ShowPosts {
+        searchTerms : String
+    }
+    | ShowPost {
+        postId : PostId
+    }
+    | ShowTag {
+        tag : Tag
+    }
     | ShowTags
     | ShowAbout
 

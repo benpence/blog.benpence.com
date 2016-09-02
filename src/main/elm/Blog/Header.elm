@@ -20,12 +20,17 @@ type Header
 
 view : Header -> Html Event
 view header =
+  let
+    isActive button = case header of
+        (Selected selected) -> selected == button
+        _ -> False
+  in
     nav [class "row navbar navbar-default"] [
         div [class "navbar-header"] [
-            ul [class "nav navbar-nav"] (List.map viewButton buttons)
+            ul [class "nav navbar-nav"] (List.map (\b -> viewButton b (isActive b)) buttons)
         ],
 
-        Html.form [class "navbar-form"] [
+        div [class "navbar-form"] [
             div [class "form-group", style [("display", "inline")]] [
                 div [class "input-group", style [("display", "table")]] [
                     span [class "input-group-addon", style [("width", "1%")]] [
@@ -43,9 +48,12 @@ view header =
         ]
     ]
 
-viewButton : Button -> Html Event
-viewButton button =
-    li [] [
+viewButton : Button -> Bool -> Html Event
+viewButton button isActive =
+  let
+    activeClass = if isActive then [class "active"] else []
+  in
+    li activeClass [
        a [onClick (Clicked button)] [
            text button.name
        ]

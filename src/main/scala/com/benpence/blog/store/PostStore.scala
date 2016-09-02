@@ -8,9 +8,10 @@ import scala.collection.JavaConverters._
 sealed trait PostQuery
 object PostQuery {
   // TODO: Better pagination abstraction
-  case class MostRecent(pageSize: Int, page: Int = 0) extends PostQuery
+  case class MostRecent(pageSize: Int, page: Int = 1) extends PostQuery
   case class ByAuthor(userId: UserId) extends PostQuery
   case class ByTag(tag: String) extends PostQuery
+  // TODO: Define what containing should return
   case class Containing(queryString: String) extends PostQuery
 }
 
@@ -18,7 +19,7 @@ object PostQuery {
 trait PostStore extends Store[PostId, Post] with QueryableStore[PostQuery, Post]
 
 class MemoryPostStore extends ConcurrentHashMapStore[PostId, Post] with PostStore {
-  class MemoryPostQuerableStore extends ReadableStore[PostQuery, Seq[Post]] {
+  class MemoryPostQueryableStore extends ReadableStore[PostQuery, Seq[Post]] {
     override def get(query: PostQuery): Future[Option[Seq[Post]]] = {
       val db = jstore.asScala
 
@@ -28,7 +29,7 @@ class MemoryPostStore extends ConcurrentHashMapStore[PostId, Post] with PostStor
             .map(_._2.get)
             .toList
             .sortBy(_.createdMillis)
-            .drop(pageSize * page)
+            .drop(pageSize * (page - 1))
             .take(pageSize)
         case PostQuery.ByAuthor(userId: UserId) =>
           db
@@ -52,5 +53,5 @@ class MemoryPostStore extends ConcurrentHashMapStore[PostId, Post] with PostStor
     }
   }
 
-  override val queryable = new MemoryPostQuerableStore
+  override val queryable = new MemoryPostQueryableStore
 }

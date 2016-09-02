@@ -6,6 +6,7 @@ import com.twitter.finagle.http.Response
 import com.twitter.finatra.http.Controller
 import com.twitter.finatra.http.response.ResponseBuilder
 import com.twitter.util.{Future, NonFatal}
+import java.net.URLDecoder
 
 sealed trait ApiResponse[T]
 
@@ -47,7 +48,7 @@ class ApiController(postService: PostService) extends Controller {
 
   get("/api/post/containing/:query_string") { request: PostsContainingRequest =>
     postService
-      .containing(request.queryString)
+      .containing(URLDecoder.decode(request.queryString, "UTF8"))
       .map(Successful(_))
       .toResponse(response)
   }
