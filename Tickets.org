@@ -38,6 +38,7 @@ CLOSED: [2016-08-22 Mon 21:12]
 Use Scala PostApi as Post object template
 *** DONE Connect layout to server API
 CLOSED: [2016-08-31 Wed 21:04]
+*** TODO Render post content client side
 *** TODO Add more server support
 **** TODO Tag counts
 ***** TODO Add TagStore in server
@@ -52,7 +53,8 @@ CLOSED: [2016-08-31 Wed 21:04]
 ** TODO Individual post page (with permalink)
 ** TODO Add search box for listing posts that match query
 ** After thoughts
-*** TODO Reduce property-based FilesTest duration
+*** DONE Reduce property-based FilesTest duration
+CLOSED: [2016-09-01 Thu 22:23]
 *** TODO Add revision number for posts, UI, API
 Use "The Title: Revision 1.md" and "The Title: Revision 2.md" or something similar
 *** TODO Blog Server feature tests

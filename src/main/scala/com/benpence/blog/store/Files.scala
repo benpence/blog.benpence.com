@@ -1,7 +1,7 @@
 package com.benpence.blog.store
 
 import com.benpence.blog.model.{Post, PostId, User, UserId}
-import com.benpence.blog.util.{MarkupLanguage, UriLoader, TryUtils}
+import com.benpence.blog.util.{UriLoader, TryUtils}
 import com.benpence.blog.util.PrimitiveEnrichments._
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
@@ -12,14 +12,11 @@ import scala.util.Try
 
 case class UriParseException(uri: String)
   extends RuntimeException(s"Failed to parse URI '$uri'")
-case class HtmlConvertException(markupLanguage: String, uri: String, t: Throwable)
-  extends RuntimeException(s"Failed to convert HTML $uri from $markupLanguage", t)
 case class UnsupportedException(`type`: String, key: String, options: Seq[String])
   extends RuntimeException(s"Unsupported ${`type`}: $key. Options are $options")
 
 case class PostContent(
-  uri: String,
-  markupLanguage: String
+  uri: String
 )
 
 case class PostMetaData(
@@ -87,14 +84,12 @@ object Posts {
    *     - beasts
    *   content:
    *     uri: file://data/posts/bloo.md
-   *     markupLanguage: markdown
    */
   def fromYaml(
     yaml: String
   )(
     implicit
-    uriLoaders: Map[String, UriLoader],
-    markupLanguages: Map[String, MarkupLanguage]
+    uriLoaders: Map[String, UriLoader]
   ): Try[Seq[Post]] = {
     val yamlMapper = new ObjectMapper(new YAMLFactory)
     yamlMapper.registerModule(DefaultScalaModule)
@@ -107,8 +102,7 @@ object Posts {
     mapper: ObjectMapper
   )(
     implicit
-    uriLoaders: Map[String, UriLoader],
-    markupLanguages: Map[String, MarkupLanguage]
+    uriLoaders: Map[String, UriLoader]
   ): Try[Seq[Post]] = {
 
     Try {
@@ -128,23 +122,14 @@ object Posts {
               "URI loader",
               metadata.content.uri,
               uriLoaders.keys.toSeq))
-          language <- markupLanguages
-            .get(metadata.content.markupLanguage)
-            .toTry(UnsupportedException(
-              "markup language",
-              metadata.content.markupLanguage,
-              markupLanguages.keys.toSeq))
           content <- loader.load(path)
-          html <- language
-            .toHtml(content)
-            .mapThrow(HtmlConvertException(metadata.content.markupLanguage, metadata.content.uri, _))
         } yield Post(
           id = PostId(metadata.id),
           author = UserId(metadata.author),
           title = metadata.title,
           createdMillis = metadata.createdMillis,
           tags = metadata.tags.toSet,
-          content = html
+          content = content
         )
       }
 

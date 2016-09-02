@@ -1,7 +1,7 @@
 package com.benpence.blog.store
 
 import com.benpence.blog.model.{User, UserId, Post, PostId}
-import com.benpence.blog.util.{UriLoader, Html}
+import com.benpence.blog.util.UriLoader
 import com.benpence.blog.util.PrimitiveEnrichments._
 import java.io.FileNotFoundException
 import org.scalacheck.{Arbitrary, Gen, Prop}
@@ -16,6 +16,9 @@ case class PostTest(path: String, post: Post)
 
 class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
   import FilesTest._
+
+  implicit override val generatorDrivenConfig =
+    PropertyCheckConfig(maxSize = 10)
 
   implicit val arbUsersTest: Arbitrary[UsersTest] = Arbitrary(Gen
     .nonEmptyListOf(arbitrary[User])
@@ -95,22 +98,18 @@ class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
                     |    - pools
                     |  content:
                     |    uri: memory://first
-                    |    markupLanguage: html
                     |- id: 1
                     |  author: 2
                     |  title: The Title 2
                     |  createdMillis: 28
                     |  tags: []
                     |  content:
-                    |    uri: memory://second
-                    |    markupLanguage: html""".stripMargin
+                    |    uri: memory://second""".stripMargin
 
       val loaders = Map("memory" -> MemoryLoader(Map(
         "first" -> "fist",
         "second" -> "secnd"
       )))
-
-      val languages = Map("html" -> Html)
 
       val expected = Try(Seq(
         Post(
@@ -129,7 +128,7 @@ class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
           "secnd")
       ))
 
-      assert(Posts.fromYaml(yaml)(loaders, languages) === expected)
+      assert(Posts.fromYaml(yaml)(loaders) === expected)
 
 
       forAll(arbitrary[PostsTest]) { case PostsTest(postTests) =>
@@ -147,8 +146,7 @@ class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
                 |  createdMillis: $createdMillis
                 |  tags:$tagBlock
                 |  content:
-                |    uri: memory://$path
-                |    markupLanguage: html""".stripMargin
+                |    uri: memory://$path""".stripMargin
 
           (block, (path, content))
         }
@@ -156,9 +154,8 @@ class FilesTest extends WordSpec with GeneratorDrivenPropertyChecks {
         val yaml = blocksAndFileEntries.map(_._1).mkString("\n")
         val pathsToContents = blocksAndFileEntries.map(_._2).toMap
         val loaders = Map("memory" -> MemoryLoader(pathsToContents))
-        val languages = Map("html" -> Html)
 
-        assert(Posts.fromYaml(yaml)(loaders, languages) === Try(postTests.map(_.post)))
+        assert(Posts.fromYaml(yaml)(loaders) === Try(postTests.map(_.post)))
       }
     }
   }

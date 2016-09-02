@@ -8,7 +8,6 @@ lazy val versions = new {
   val finagle = "6.35.0"
   val jackson = "2.7.2"
   val mockito = "1.8.5"
-  val pegdown = "1.6.0"
   val scalaCheck = "1.12.5"
   val scalaTest = "2.2.4"
   val scalding = "0.16.0"
@@ -29,7 +28,6 @@ libraryDependencies ++= Seq(
   "com.twitter"                      %% "finagle-mysql"           % versions.finagle,
   "com.twitter"                      %% "storehaus-core"          % versions.storehaus,
   "com.twitter"                      %% "scalding-args"           % versions.scalding,
-  "org.pegdown"                      %  "pegdown"                 % versions.pegdown,
   "org.slf4j"                        %  "slf4j-api"               % versions.slf4j,
   "org.slf4j"                        %  "slf4j-simple"            % versions.slf4j,
 

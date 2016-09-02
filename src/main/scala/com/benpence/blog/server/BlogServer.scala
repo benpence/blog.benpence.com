@@ -2,7 +2,7 @@ package com.benpence.blog.server
 
 import com.benpence.blog.service.PostService
 import com.benpence.blog.store.{MemoryPostStore, MemoryUserStore, Posts, Users}
-import com.benpence.blog.util.{MarkupLanguage, UriLoader}
+import com.benpence.blog.util.UriLoader
 import com.benpence.blog.util.ArgsEnrichments._
 import com.benpence.blog.util.PrimitiveEnrichments._
 import com.twitter.finagle.http.{Request, Response}
@@ -28,7 +28,6 @@ class BlogServer(apiController: ApiController) extends HttpServer {
 
 object MainBlogServer {
   implicit val supportedUriLoaders = UriLoader.defaults.map { l => (l.name, l) }.toMap
-  implicit val supportedMarkupLanguages = MarkupLanguage.defaults.map { l => (l.name, l) }.toMap
 
   val PostsFileArg = "file.posts"
   val UsersFileArg = "file.users"
