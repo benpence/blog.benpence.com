@@ -9,6 +9,7 @@ import Html.Events exposing ( onClick )
 import                          Date
 import Blog.Decode           as Decode
 import Html.App              as Html
+import                          Markdown
 import Blog.Tag              as Tag
 
 type Event
@@ -36,9 +37,11 @@ viewPost post =
             Html.map fromTagEvent (Tag.viewButtons tags)
         ],
 
-        -- TODO: Render content
-        div [class "post-content"] [text post.content]
+        div [class "post-content"] [viewContent post.content]
     ]
+
+viewContent : String -> Html a
+viewContent = Markdown.toHtml []
 
 viewTimestamp : Int -> String
 viewTimestamp epochMillis =

@@ -7,7 +7,6 @@
     - reborn
   content:
     uri: file://data/posts/Bloo.md
-    markupLanguage: markdown
 - id: 1
   author: 0
   title: Winter Coming :)
@@ -17,4 +16,3 @@
     - beasts
   content:
     uri: file://data/posts/Blee.md
-    markupLanguage: markdown
