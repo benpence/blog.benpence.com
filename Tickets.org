@@ -38,19 +38,23 @@ CLOSED: [2016-08-22 Mon 21:12]
 Use Scala PostApi as Post object template
 *** DONE Connect layout to server API
 CLOSED: [2016-08-31 Wed 21:04]
-*** TODO Render post content client side
-*** TODO Add more server support
+*** DONE Render post content client side
+CLOSED: [2016-09-01 Thu 22:30]
+*** DOING Add more server support
+**** DONE Consolidate server API
+CLOSED: [2016-09-05 Mon 00:03]
 **** TODO Tag counts
 ***** TODO Add TagStore in server
+***** TODO Add API endpoint for tags
+***** TODO Add frontend client method for tagcount
 **** TODO Individual post (client only)
-**** DOING About page
+**** TODO About page
 *** TODO Better handling of failed fetches
 *** TODO Pagination server and client side
 *** TODO Delay search results to reduce requests
 *** TODO Add unit tests against events
 **** TODO State changes
 **** TODO Research how other people do view tests
-** TODO Individual post page (with permalink)
 ** TODO Add search box for listing posts that match query
 ** After thoughts
 *** DONE Reduce property-based FilesTest duration

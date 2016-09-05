@@ -1,7 +1,7 @@
 package com.benpence.blog.server
 
 import com.benpence.blog.model.{PostId, UserId}
-import com.benpence.blog.service.PostService
+import com.benpence.blog.service.ApiService
 import com.twitter.finagle.http.Response
 import com.twitter.finatra.http.Controller
 import com.twitter.finatra.http.response.ResponseBuilder
@@ -18,44 +18,29 @@ case class InvalidPostId(id: Long) extends ApiError(s"Invalid post_id: '$id'")
 case class InvalidUserId(id: Long) extends ApiError(s"Invalid user_id: '$id'")
 case class ParameterConstraint(constraint: String) extends ApiError(constraint)
 
-class ApiController(postService: PostService) extends Controller {
-
+class ApiController(apiService: ApiService) extends Controller {
   import ApiResponse._
 
-  get("/api/post/most_recent") { request: MostRecentPostsRequest =>
-    postService
-      .mostRecent(request.pageSize, request.page)
+  get("/api/post/search") { request: PostsSearchRequest =>
+    val queryString = URLDecoder.decode(request.queryString, "UTF8")
+
+    apiService
+      .searchPosts(queryString, request.pageSize, request.page)
       .map(Successful(_))
       .toResponse(response)
   }
 
-  get("/api/post/by_author/:user_id") { request: PostsByAuthorRequest =>
-    postService
-      .byAuthor(UserId(request.userId))
-      .map {
-        case Some(apiPosts) => Successful(apiPosts)
-        case None => InvalidUserId(request.userId)
-      }
-      .toResponse(response)
-  }
-
-  get("/api/post/by_tag/:tag") { request: PostsByTagRequest =>
-    postService
-      .byTag(request.tag)
+  get("/api/post/by_tag") { request: PostsByTagRequest =>
+    apiService
+      .postsByTag(request.tag, request.pageSize, request.page)
       .map(Successful(_))
       .toResponse(response)
   }
 
-  get("/api/post/containing/:query_string") { request: PostsContainingRequest =>
-    postService
-      .containing(URLDecoder.decode(request.queryString, "UTF8"))
-      .map(Successful(_))
-      .toResponse(response)
-  }
 
-  get("/api/post/by_id/:post_id") { request: PostRequest =>
-    postService 
-      .apply(PostId(request.postId))
+  get("/api/post/by_id") { request: PostRequest =>
+    apiService
+      .postById(PostId(request.postId))
       .map {
         case Some(apiPost) => Successful(apiPost)
         case None => InvalidPostId(request.postId)

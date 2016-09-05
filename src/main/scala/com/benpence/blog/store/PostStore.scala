@@ -7,12 +7,8 @@ import scala.collection.JavaConverters._
 
 sealed trait PostQuery
 object PostQuery {
-  // TODO: Better pagination abstraction
-  case class MostRecent(pageSize: Int, page: Int = 1) extends PostQuery
-  case class ByAuthor(userId: UserId) extends PostQuery
+  case class Search(queryString: String) extends PostQuery
   case class ByTag(tag: String) extends PostQuery
-  // TODO: Define what containing should return
-  case class Containing(queryString: String) extends PostQuery
 }
 
 
@@ -24,28 +20,17 @@ class MemoryPostStore extends ConcurrentHashMapStore[PostId, Post] with PostStor
       val db = jstore.asScala
 
       val result = query match {
-        case PostQuery.MostRecent(pageSize, page) =>
-          db
-            .map(_._2.get)
-            .toList
-            .sortBy(_.createdMillis)
-            .drop(pageSize * (page - 1))
-            .take(pageSize)
-        case PostQuery.ByAuthor(userId: UserId) =>
-          db
-            .iterator
-            .collect { case (_, Some(post)) if post.author == userId => post }
-            .toList
-        case PostQuery.ByTag(tag: String) =>
-          db
-            .iterator
-            .collect { case (_, Some(post)) if post.tags.contains(tag) => post }
-            .toList
-        case PostQuery.Containing(queryString) =>
+        case PostQuery.Search(queryString) =>
           db
             .iterator
             // TODO: Expand
             .collect { case (_, Some(post)) if post.content.contains(queryString) => post }
+            .toList
+            .sortBy(_.createdMillis)
+        case PostQuery.ByTag(tag: String) =>
+          db
+            .iterator
+            .collect { case (_, Some(post)) if post.tags.contains(tag) => post }
             .toList
       }
 

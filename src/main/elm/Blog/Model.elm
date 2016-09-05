@@ -47,7 +47,7 @@ update : Api.Client -> Event -> Model -> (Model, Cmd Event)
 update client event model = let unimplemented = (model, Cmd.none) in case event of
     (ViewEvent (View.ShowPosts { searchTerms })) -> withPostsTask
         model
-        (client.fetchPosts searchTerms pageOne)
+        (client.searchPosts searchTerms pageOne)
         (\posts -> FetchedPosts { searchTerms = searchTerms, posts = posts })
 
     -- TODO: Add API method
@@ -56,7 +56,7 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
     -- TODO: Add API method
     (ViewEvent (View.ShowTag { tag })) -> withPostsTask
         model
-        (client.fetchByTag tag pageOne)
+        (client.postsByTag tag pageOne)
         (\posts -> FetchedTag { tag = tag, posts = posts })
 
 

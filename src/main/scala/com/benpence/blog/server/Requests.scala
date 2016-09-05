@@ -3,7 +3,10 @@ package com.benpence.blog.server
 import com.twitter.finatra.request.{QueryParam, RouteParam}
 import com.twitter.finatra.validation.Size
 
-case class MostRecentPostsRequest(
+case class PostsSearchRequest(
+  @QueryParam
+  queryString: String,
+
   @QueryParam
   pageSize: Int,
 
@@ -11,22 +14,18 @@ case class MostRecentPostsRequest(
   page: Int
 )
 
-case class PostsByAuthorRequest(
-  @RouteParam
-  userId: Long
-)
-
 case class PostsByTagRequest(
-  @RouteParam
-  tag: String
-)
+  @QueryParam
+  tag: String,
 
-case class PostsContainingRequest(
-  @RouteParam
-  queryString: String
+  @QueryParam
+  pageSize: Int,
+
+  @QueryParam
+  page: Int
 )
 
 case class PostRequest(
-  @RouteParam
+  @QueryParam
   postId: Long
 )

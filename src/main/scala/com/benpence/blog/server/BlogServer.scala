@@ -1,6 +1,6 @@
 package com.benpence.blog.server
 
-import com.benpence.blog.service.PostService
+import com.benpence.blog.service.StoreApiService
 import com.benpence.blog.store.{MemoryPostStore, MemoryUserStore, Posts, Users}
 import com.benpence.blog.util.UriLoader
 import com.benpence.blog.util.ArgsEnrichments._
@@ -62,7 +62,7 @@ object MainBlogServer {
 
     val server = new BlogServer(
       new ApiController(
-        new PostService(postStore, userStore)
+        new StoreApiService(postStore, userStore)
       )
     )
 
