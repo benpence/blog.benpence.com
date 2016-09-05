@@ -20,7 +20,11 @@ viewButton tag =
 
 viewCounts : List (Tag, Int) -> Html Event
 viewCounts tagCounts =
-    div [class "tag-list list-group"] (List.map viewCount tagCounts)
+    div [class "tag-list list-group"] (
+        List.map
+            viewCount
+            (List.sortBy (\(t, _) -> t.name) tagCounts)
+    )
 
 viewCount : (Tag, Int) -> Html Event
 viewCount (tag, count) =
