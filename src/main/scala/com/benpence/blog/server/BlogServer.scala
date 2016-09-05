@@ -1,7 +1,8 @@
 package com.benpence.blog.server
 
+import com.benpence.blog.model.{Tag, TagId}
 import com.benpence.blog.service.StoreApiService
-import com.benpence.blog.store.{MemoryPostStore, MemoryUserStore, Posts, Users}
+import com.benpence.blog.store._
 import com.benpence.blog.util.UriLoader
 import com.benpence.blog.util.ArgsEnrichments._
 import com.benpence.blog.util.PrimitiveEnrichments._
@@ -9,6 +10,7 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
 import com.twitter.finatra.http.routing.HttpRouter
+import com.twitter.storehaus.Store
 import com.twitter.scalding.Args
 import com.twitter.util.{Await, Future}
 import java.io.File
@@ -50,19 +52,44 @@ object MainBlogServer {
     }
 
     val postStore = new MemoryPostStore
+    val tagStore = new MemoryTagStore
+    val taggedPostsStore = new MemoryTaggedPostsStore
     Await.result {
       Posts
         .fromYaml(postsYaml)
         .toFuture
         .flatMap { posts =>
-          val futures = postStore.multiPut(posts.map { post => (post.id, Some(post)) }.toMap)
-          Future.join(futures.values.toList)
+          val (tags, taggedPostss) = posts.flatMap { post =>
+            post.tags.map { tag => (tag, post.id) }
+          }
+          .groupBy(_._1)
+          .zipWithIndex
+          .map { case ((name, postIds), id) =>
+              val tagId = TagId(id)
+              (Tag(tagId, name), TaggedPosts(tagId, postIds.map(_._2).toSet))
+          }
+          .unzip
+
+          def write[K, V](store: Store[K, V], vs: Seq[V])(k: V => K) = {
+            val futures = store.multiPut(vs.map { v => (k(v), Some(v)) }.toMap)
+            Future.join(futures.values.toList)
+          }
+
+          for {
+            _ <- write(postStore, posts)(_.id)
+            _ <- write(tagStore, tags.toList)(_.id)
+            _ <- write(taggedPostsStore, taggedPostss.toList)(_.tag)
+          } yield ()
         }
     }
 
     val server = new BlogServer(
       new ApiController(
-        new StoreApiService(postStore, userStore)
+        new StoreApiService(
+          postStore,
+          userStore,
+          tagStore,
+          taggedPostsStore)
       )
     )
 

@@ -29,3 +29,6 @@ case class PostRequest(
   @QueryParam
   postId: Long
 )
+
+case class TagCountsRequest(
+)

@@ -53,7 +53,6 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
     -- TODO: Add API method
     (ViewEvent (View.ShowPost { postId })) -> unimplemented
 
-    -- TODO: Add API method
     (ViewEvent (View.ShowTag { tag })) -> withPostsTask
         model
         (client.postsByTag tag pageOne)
@@ -61,7 +60,10 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
 
 
     -- TODO: Add API method
-    (ViewEvent View.ShowTags) -> unimplemented
+    (ViewEvent View.ShowTags) -> model `withTask`
+        Task.map
+            (\tagCounts -> FetchedTagCounts { tagCounts = tagCounts })
+            client.tagCounts
 
     -- TODO: Add API method
     (ViewEvent View.ShowAbout) -> unimplemented

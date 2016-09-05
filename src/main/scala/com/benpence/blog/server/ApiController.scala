@@ -47,6 +47,13 @@ class ApiController(apiService: ApiService) extends Controller {
       }
       .toResponse(response)
   }
+
+  get("/api/tagcounts") { request: TagCountsRequest =>
+    apiService
+      .tagCounts
+      .map(Successful(_))
+      .toResponse(response)
+  }
 }
 
 object ApiResponse {

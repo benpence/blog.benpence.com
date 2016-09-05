@@ -1,7 +1,7 @@
 package com.benpence.blog.service
 
-import com.benpence.blog.model.{ApiUser, ApiPost, Post, PostId, User, UserId}
-import com.benpence.blog.store.{PostQuery, PostStore, UserStore}
+import com.benpence.blog.model._
+import com.benpence.blog.store._
 import com.benpence.blog.util.Clock
 import com.benpence.blog.util.PrimitiveEnrichments._
 import com.twitter.util.Future
@@ -10,11 +10,14 @@ trait ApiService {
   def searchPosts(queryString: String, pageSize: Int, page: Int): Future[Seq[ApiPost]]
   def postsByTag(tag: String, pageSize: Int, page: Int): Future[Seq[ApiPost]]
   def postById(postId: PostId): Future[Option[ApiPost]]
+  def tagCounts: Future[Seq[TagCount]]
 }
 
 class StoreApiService(
   val postStore: PostStore,
-  val userStore: UserStore
+  val userStore: UserStore,
+  val tagStore: TagStore,
+  val taggedPostsStore: TaggedPostsStore
 ) extends ApiService {
 
   override def searchPosts(queryString: String, pageSize: Int, page: Int): Future[Seq[ApiPost]] = {
@@ -23,6 +26,15 @@ class StoreApiService(
       .flatMap { case Some(posts) =>
         val outputPosts = paginated(posts, pageSize, page)
         Future.collect(outputPosts.map(hydratePost))
+      }
+  }
+
+  override def postById(postId: PostId): Future[Option[ApiPost]] = {
+    postStore
+      .get(postId)
+      .flatMap {
+        case Some(post) => hydratePost(post).map(Some(_))
+        case None => Future.value(None)
       }
   }
 
@@ -35,12 +47,17 @@ class StoreApiService(
       }
   }
 
-  def postById(postId: PostId): Future[Option[ApiPost]] = {
-    postStore
-      .get(postId)
-      .flatMap {
-        case Some(post) => hydratePost(post).map(Some(_))
-        case None => Future.value(None)
+  override def tagCounts: Future[Seq[TagCount]] = {
+    tagStore.queryable
+      .get(TagQuery.All)
+      .flatMap { case Some(tags) =>
+        val taggedPosts = tags.map { tag =>
+          taggedPostsStore
+            .get(tag.id)
+            .map { case Some(taggedPosts) => TagCount(tag.name, taggedPosts.postIds.size) }
+        }
+
+        Future.collect(taggedPosts)
       }
   }
 

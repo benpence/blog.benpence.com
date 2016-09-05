@@ -12,14 +12,16 @@ import                          Task
 
 type alias Client = {
     searchPosts : String -> Page -> Task String (List Post),
-    postsByTag : Tag -> Page -> Task String (List Post)
+    postsByTag : Tag -> Page -> Task String (List Post),
+    tagCounts : Task String (List (Tag, Int))
 }
 
 -- TODO: Make decoder injectable
 remoteClient : Client
 remoteClient = {
     searchPosts = remoteSearchPosts,
-    postsByTag = remotePostsByTag
+    postsByTag = remotePostsByTag,
+    tagCounts = remoteTagCounts
   }
 
 remoteSearchPosts : String -> Page -> Task String (List Post)
@@ -61,6 +63,17 @@ remotePostsByTagUrl tag page =
     ]
 
 remotePostsByTagPath = "/api/post/by_tag"
+
+remoteTagCounts : Task String (List (Tag, Int))
+remoteTagCounts =
+  let
+    decode = decodeResponse (Json.list Decode.tagCount)
+  in
+     toString
+         `Task.mapError` Http.getString remoteTagCountsPath
+         `Task.andThen` (Task.fromResult << decode)
+
+remoteTagCountsPath = "/api/tagcounts"
 
 decodeResponse : Json.Decoder a -> String -> Result String a
 decodeResponse decoder input =

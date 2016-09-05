@@ -1,6 +1,7 @@
 module Blog.Decode exposing (..)
 
 import Blog.Types exposing ( Post, PostId(..), User, UserId(..) )
+import Blog.Tag exposing ( Tag )
 import Json.Decode exposing ( Decoder, (:=) )
 
 import Json.Decode           as Json
@@ -24,3 +25,11 @@ post = Json.object6 Post
     ("created_millis" := Json.int)
     ("tags"           := (Json.list Json.string))
     ("content"        := Json.string)
+
+tag : Decoder Tag
+tag = Json.map (\name -> { name = name }) Json.string
+
+tagCount : Decoder (Tag, Int)
+tagCount = Json.object2 (,)
+    ("tag"            := tag)
+    ("count"          := Json.int)

@@ -43,10 +43,14 @@ CLOSED: [2016-09-01 Thu 22:30]
 *** DOING Add more server support
 **** DONE Consolidate server API
 CLOSED: [2016-09-05 Mon 00:03]
-**** TODO Tag counts
-***** TODO Add TagStore in server
-***** TODO Add API endpoint for tags
-***** TODO Add frontend client method for tagcount
+**** DONE Tag counts
+CLOSED: [2016-09-05 Mon 15:08]
+***** DONE Add TagStore in server
+CLOSED: [2016-09-05 Mon 15:08]
+***** DONE Add API endpoint for tags
+CLOSED: [2016-09-05 Mon 15:08]
+***** DONE Add frontend client method for tagcount
+CLOSED: [2016-09-05 Mon 15:08]
 **** TODO Individual post (client only)
 **** TODO About page
 *** TODO Better handling of failed fetches

@@ -45,5 +45,9 @@ case class ApiPost(
   content: String
 )
 
+case class TagId(asLong: Long) extends AnyVal
+case class Tag(id: TagId, name: String)
+case class TagCount(tag: String, count: Long)
+
 case class Cookie(asString: String) extends AnyVal
 case class Login(cookie: Cookie, userId: UserId, timeLoggedInMillis: Long)
