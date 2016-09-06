@@ -1,6 +1,6 @@
 module Blog.Api exposing ( Client, remoteClient )
 
-import Blog.Types exposing ( Page, Post )
+import Blog.Types exposing ( Page, Post, PostId(..) )
 import Blog.Tag exposing ( Tag )
 import Task exposing ( Task )
 
@@ -13,6 +13,7 @@ import                          Task
 type alias Client = {
     searchPosts : String -> Page -> Task String (List Post),
     postsByTag : Tag -> Page -> Task String (List Post),
+    postbyId : PostId -> Task String Post,
     tagCounts : Task String (List (Tag, Int))
 }
 
@@ -21,6 +22,7 @@ remoteClient : Client
 remoteClient = {
     searchPosts = remoteSearchPosts,
     postsByTag = remotePostsByTag,
+    postbyId = remotePostById,
     tagCounts = remoteTagCounts
   }
 
@@ -63,6 +65,24 @@ remotePostsByTagUrl tag page =
     ]
 
 remotePostsByTagPath = "/api/post/by_tag"
+
+remotePostById : PostId -> Task String Post
+remotePostById id =
+  let
+    url = remotePostByIdUrl id
+    decode = decodeResponse Decode.post
+  in
+     toString
+         `Task.mapError` Http.getString url
+         `Task.andThen` (Task.fromResult << decode)
+
+remotePostByIdUrl : PostId -> String
+remotePostByIdUrl (PostId id) =
+    Http.url remotePostByIdPath [
+        ("post_id", toString id)
+    ]
+
+remotePostByIdPath = "/api/post/by_id"
 
 remoteTagCounts : Task String (List (Tag, Int))
 remoteTagCounts =

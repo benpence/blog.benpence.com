@@ -27,6 +27,9 @@ type Event
         { searchTerms : String
         , posts : List Post
         }
+    | FetchedPost
+        { post : Post
+        }
     | FetchedTag
         { tag : Tag
         , posts : List Post
@@ -51,7 +54,10 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
         (\posts -> FetchedPosts { searchTerms = searchTerms, posts = posts })
 
     -- TODO: Add API method
-    (ViewEvent (View.ShowPost { postId })) -> unimplemented
+    (ViewEvent (View.ShowPost { postId })) -> model `withTask`
+        Task.map
+            (\post -> FetchedPost { post = post })
+            (client.postbyId postId)
 
     (ViewEvent (View.ShowTag { tag })) -> withPostsTask
         model
@@ -71,6 +77,10 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
     (FetchedPosts { searchTerms, posts }) -> model `withContent` (View.PostsContent {
         searchTerms = searchTerms,
         posts = posts
+    })
+
+    (FetchedPost { post }) -> model `withContent` (View.PostContent {
+        post = post
     })
 
     (FetchedTag { tag, posts }) -> model `withContent` (View.TagContent {

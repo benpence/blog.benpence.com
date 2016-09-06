@@ -31,7 +31,8 @@ CLOSED: [2016-08-19 Fri 23:18]
 CLOSED: [2016-08-19 Fri 23:18]
 *** DONE Primitives unit test
 CLOSED: [2016-08-17 Wed 22:16]
-** DOING Create most-recent frontend page
+** DONE Create most-recent frontend page
+CLOSED: [2016-09-05 Mon 19:18]
 Shows most recent N posts
 *** DONE Create layout in elm from static posts content
 CLOSED: [2016-08-22 Mon 21:12]
@@ -40,7 +41,8 @@ Use Scala PostApi as Post object template
 CLOSED: [2016-08-31 Wed 21:04]
 *** DONE Render post content client side
 CLOSED: [2016-09-01 Thu 22:30]
-*** DOING Add more server support
+*** DONE Add more server support
+CLOSED: [2016-09-05 Mon 19:18]
 **** DONE Consolidate server API
 CLOSED: [2016-09-05 Mon 00:03]
 **** DONE Tag counts
@@ -51,14 +53,15 @@ CLOSED: [2016-09-05 Mon 15:08]
 CLOSED: [2016-09-05 Mon 15:08]
 ***** DONE Add frontend client method for tagcount
 CLOSED: [2016-09-05 Mon 15:08]
-**** TODO Individual post (client only)
-**** TODO About page
-*** TODO Better handling of failed fetches
-*** TODO Pagination server and client side
-*** TODO Delay search results to reduce requests
-*** TODO Add unit tests against events
-**** TODO State changes
-**** TODO Research how other people do view tests
+**** DONE Individual post (client only)
+CLOSED: [2016-09-05 Mon 19:16]
+** TODO About page
+** TODO Better handling of failed fetches
+** TODO Pagination server and client side
+** TODO Delay search results to reduce requests
+** TODO Add unit tests against events
+*** TODO State changes
+*** TODO Research how other people do view tests
 ** TODO Add search box for listing posts that match query
 ** After thoughts
 *** DONE Reduce property-based FilesTest duration

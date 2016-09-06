@@ -14,6 +14,9 @@ import Blog.Tag              as Tag
 
 type Content
     = Empty
+    | PostContent {
+        post : Post
+    }
     | PostsContent {
         searchTerms : String,
         posts : List Post
@@ -55,6 +58,8 @@ toHeader content = case content of
         if searchTerms == "" then Header.Selected Header.postsButton
         else Header.SearchTerms searchTerms
 
+    (PostContent _) -> Header.SearchTerms ""
+
     (TagContent _) -> Header.SearchTerms ""
 
     (TagsContent _) -> Header.Selected Header.tagsButton
@@ -79,6 +84,12 @@ viewBody content = case content of
             Html.map fromPostsEvent (Posts.view posts)
         ]
     ]
+
+    (PostContent { post }) -> viewBody (PostsContent {
+        searchTerms = "",
+        posts = [post]
+    })
+
 
     (TagContent { tag, posts }) -> singleRowCol [
         div [class "tag-heading"] [text tag.name],
