@@ -55,6 +55,8 @@ CLOSED: [2016-09-05 Mon 15:08]
 CLOSED: [2016-09-05 Mon 15:08]
 **** DONE Individual post (client only)
 CLOSED: [2016-09-05 Mon 19:16]
+** DONE Make web buttons use anchor
+CLOSED: [2016-09-07 Wed 21:53]
 ** TODO About page
 ** TODO Better handling of failed fetches
 ** TODO Pagination server and client side

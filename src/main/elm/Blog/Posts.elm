@@ -26,8 +26,8 @@ viewPost post =
     tags = List.map (\name -> { name = name }) post.tags
   in
     div [class "post"] [
-        h1 [class "post-title", onClick (PostClicked post.id)] [
-            text post.title
+        h1 [class "post-title"] [
+            a [onClick (PostClicked post.id)] [text post.title]
         ],
 
         div [class "post-date-tags"] [

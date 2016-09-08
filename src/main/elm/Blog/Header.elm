@@ -50,14 +50,18 @@ view header =
 
 viewButton : Button -> Bool -> Html Event
 viewButton button isActive =
-  let
-    activeClass = if isActive then [class "active"] else []
-  in
-    li activeClass [
-       a [onClick (Clicked button)] [
-           text button.name
-       ]
-    ]
+    if isActive then
+        li [class "active"] [
+           a [] [
+               text button.name
+           ]
+        ]
+    else
+        li [] [
+          a [onClick (Clicked button)] [
+              text button.name
+          ]
+        ]
 
 postsButton = { name = "Posts" }
 tagsButton  = { name = "Tags" }
