@@ -5,6 +5,7 @@ import Blog.Types exposing ( Post, PostId )
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onClick )
+import Markdown exposing ( defaultOptions )
 
 import                          Date
 import Blog.Decode           as Decode
@@ -41,7 +42,12 @@ viewPost post =
     ]
 
 viewContent : String -> Html a
-viewContent = Markdown.toHtml []
+viewContent = Markdown.toHtmlWith
+    { defaultOptions |
+        githubFlavored = Just { tables = True, breaks = True },
+        smartypants = True
+    }
+    []
 
 viewTimestamp : Int -> String
 viewTimestamp epochMillis =
