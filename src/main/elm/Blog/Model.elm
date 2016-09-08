@@ -71,8 +71,10 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
             (\tagCounts -> FetchedTagCounts { tagCounts = tagCounts })
             client.tagCounts
 
-    -- TODO: Add API method
-    (ViewEvent View.ShowAbout) -> unimplemented
+    (ViewEvent View.ShowAbout) -> model `withTask`
+        Task.map
+            (\content -> FetchedAbout { content = content })
+            client.about
 
     (FetchedPosts { searchTerms, posts }) -> model `withContent` (View.PostsContent {
         searchTerms = searchTerms,

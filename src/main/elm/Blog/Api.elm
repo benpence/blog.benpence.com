@@ -14,7 +14,8 @@ type alias Client = {
     searchPosts : String -> Page -> Task String (List Post),
     postsByTag : Tag -> Page -> Task String (List Post),
     postbyId : PostId -> Task String Post,
-    tagCounts : Task String (List (Tag, Int))
+    tagCounts : Task String (List (Tag, Int)),
+    about : Task String String
 }
 
 -- TODO: Make decoder injectable
@@ -23,7 +24,8 @@ remoteClient = {
     searchPosts = remoteSearchPosts,
     postsByTag = remotePostsByTag,
     postbyId = remotePostById,
-    tagCounts = remoteTagCounts
+    tagCounts = remoteTagCounts,
+    about = remoteAbout
   }
 
 remoteSearchPosts : String -> Page -> Task String (List Post)
@@ -94,6 +96,13 @@ remoteTagCounts =
          `Task.andThen` (Task.fromResult << decode)
 
 remoteTagCountsPath = "/api/tagcounts"
+
+remoteAbout : Task String String
+remoteAbout =
+     toString
+         `Task.mapError` Http.getString remoteAboutPath
+
+remoteAboutPath = "/static/About.md"
 
 decodeResponse : Json.Decoder a -> String -> Result String a
 decodeResponse decoder input =

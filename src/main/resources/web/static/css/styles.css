@@ -1,0 +1,57 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.search-box {
+  display: table;
+}
+
+/* First post */
+.post:first-child > h1 {
+  margin-top: 0px;
+}
+.post-title {
+  font-size: 120px;
+  font-weight: bold;
+}
+
+a {
+  color: #000;
+  cursor: pointer;
+}
+
+a:visited {
+  color: #000;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #fff;
+  background-color: #000;
+}
+
+.post-date-tags {
+  padding-bottom: 10px;
+}
+.post-date {
+  font-size: 110%;
+  font-weight: bold;
+}
+.post-tag {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.post-content {
+  font-size: 18px;
+  text-align: justify;
+}
+
+.search-box {
+  display: table;
+}
+
+.tag-count {
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+}

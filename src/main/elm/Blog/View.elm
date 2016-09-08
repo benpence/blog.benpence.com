@@ -10,6 +10,7 @@ import Html.Events exposing ( onInput )
 import Blog.Header           as Header
 import Html.App              as Html
 import Blog.Posts            as Posts
+import Blog.Markdown         as Markdown
 import Blog.Tag              as Tag 
 
 type Content
@@ -102,8 +103,7 @@ viewBody content = case content of
         ]
     ]
 
-    -- TODO: Render About content
-    (AboutContent { content }) -> singleRowCol [text content]
+    (AboutContent { content }) -> singleRowCol [Markdown.render content]
 
 fromPostsEvent : Posts.Event -> Event
 fromPostsEvent event = case event of

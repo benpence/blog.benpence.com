@@ -57,7 +57,14 @@ CLOSED: [2016-09-05 Mon 15:08]
 CLOSED: [2016-09-05 Mon 19:16]
 ** DONE Make web buttons use anchor
 CLOSED: [2016-09-07 Wed 21:53]
-** TODO About page
+** DONE About page
+CLOSED: [2016-09-07 Wed 22:25]
+*** DONE Create static file
+CLOSED: [2016-09-07 Wed 22:08]
+*** DONE Add frontend client method
+CLOSED: [2016-09-07 Wed 22:16]
+*** DONE Render About content
+CLOSED: [2016-09-07 Wed 22:16]
 ** TODO Better handling of failed fetches
 ** TODO Pagination server and client side
 ** TODO Delay search results to reduce requests

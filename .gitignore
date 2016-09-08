@@ -1,6 +1,7 @@
 node_modules/
 elm-stuff/
-src/main/resources/web
+
+src/main/resources/web/static/index.js
 
 project/
 target/
