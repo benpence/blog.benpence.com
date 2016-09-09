@@ -33,3 +33,8 @@ tagCount : Decoder (Tag, Int)
 tagCount = Json.object2 (,)
     ("tag"            := tag)
     ("count"          := Json.int)
+
+posts : Decoder (Int, List Post)
+posts = Json.object2 (,)
+    ("total_pages"    := Json.int)
+    ("posts"          := (Json.list post))

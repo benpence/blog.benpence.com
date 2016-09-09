@@ -7,9 +7,17 @@ import com.benpence.blog.util.PrimitiveEnrichments._
 import com.twitter.util.Future
 
 trait ApiService {
-  def searchPosts(queryString: String, pageSize: Int, page: Int): Future[Seq[ApiPost]]
-  def postsByTag(tag: String, pageSize: Int, page: Int): Future[Seq[ApiPost]]
+  /*
+   * Yield 
+   *   - how many pages there are in total
+   *   - all posts if their content has `queryString` as a substring, exactly.
+   */
+  def searchPosts(queryString: String, pageSize: Int, page: Int): Future[ApiPosts]
   def postById(postId: PostId): Future[Option[ApiPost]]
+  def postsByTag(tag: String, pageSize: Int, page: Int): Future[ApiPosts]
+  /*
+   * How many posts are tagged by each tag
+   */
   def tagCounts: Future[Seq[TagCount]]
 }
 
@@ -20,12 +28,14 @@ class StoreApiService(
   val taggedPostsStore: TaggedPostsStore
 ) extends ApiService {
 
-  override def searchPosts(queryString: String, pageSize: Int, page: Int): Future[Seq[ApiPost]] = {
+  override def searchPosts(queryString: String, pageSize: Int, page: Int): Future[ApiPosts] = {
     postStore.queryable
       .get(PostQuery.Search(queryString))
       .flatMap { case Some(posts) =>
-        val outputPosts = paginated(posts, pageSize, page)
-        Future.collect(outputPosts.map(hydratePost))
+        val (totalPages, outputPosts) = paginated(posts, pageSize, page)
+        Future
+          .collect(outputPosts.map(hydratePost))
+          .map { posts => ApiPosts(totalPages, posts) }
       }
   }
 
@@ -38,12 +48,14 @@ class StoreApiService(
       }
   }
 
-  override def postsByTag(tag: String, pageSize: Int, page: Int): Future[Seq[ApiPost]] = {
+  override def postsByTag(tag: String, pageSize: Int, page: Int): Future[ApiPosts] = {
     postStore.queryable
       .get(PostQuery.ByTag(tag))
       .flatMap { case Some(posts) =>
-        val outputPosts = paginated(posts, pageSize, page)
-        Future.collect(outputPosts.map(hydratePost))
+        val (totalPages, outputPosts) = paginated(posts, pageSize, page)
+        Future
+          .collect(outputPosts.map(hydratePost))
+          .map { posts => ApiPosts(totalPages, posts) }
       }
   }
 
@@ -61,8 +73,11 @@ class StoreApiService(
       }
   }
 
-  private[service] def paginated[A](list: Seq[A], pageSize: Int, page: Int): Seq[A] = {
-    list.drop((page - 1) * pageSize).take(pageSize)
+  private[service] def paginated[A](list: Seq[A], pageSize: Int, page: Int): (Int, Seq[A]) = {
+    val items = list.drop((page - 1) * pageSize).take(pageSize)
+    val totalPages = (list.size / pageSize.toFloat).ceil.toInt
+
+    (totalPages, items)
   }
 
   private[service] def hydratePost(post: Post): Future[ApiPost] = {

@@ -45,6 +45,11 @@ case class ApiPost(
   content: String
 )
 
+case class ApiPosts(
+  totalPages: Int,
+  posts: Seq[ApiPost]
+)
+
 case class TagId(asLong: Long) extends AnyVal
 case class Tag(id: TagId, name: String)
 case class TagCount(tag: String, count: Long)

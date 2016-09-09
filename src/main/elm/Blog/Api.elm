@@ -32,11 +32,11 @@ remoteSearchPosts : String -> Page -> Task String (List Post)
 remoteSearchPosts searchTerms page =
   let
     url = remoteSearchPostsUrl searchTerms page
-    decode = decodeResponse (Json.list Decode.post)
+    decode = decodeResponse Decode.posts
   in
      toString
          `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+         `Task.andThen` (Task.fromResult << Result.map snd << decode)
 
 remoteSearchPostsUrl : String -> Page -> String
 remoteSearchPostsUrl searchTerms page =
@@ -52,11 +52,11 @@ remotePostsByTag : Tag -> Page -> Task String (List Post)
 remotePostsByTag tag page =
   let
     url = remotePostsByTagUrl tag page
-    decode = decodeResponse (Json.list Decode.post)
+    decode = decodeResponse Decode.posts
   in
      toString
          `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+         `Task.andThen` (Task.fromResult << Result.map snd << decode)
 
 remotePostsByTagUrl : Tag -> Page -> String
 remotePostsByTagUrl tag page =
