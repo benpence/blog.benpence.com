@@ -65,8 +65,8 @@ CLOSED: [2016-09-07 Wed 22:08]
 CLOSED: [2016-09-07 Wed 22:16]
 *** DONE Render About content
 CLOSED: [2016-09-07 Wed 22:16]
-** TODO Better handling of failed fetches
 ** TODO Pagination server and client side
+** TODO Better handling of failed fetches
 ** TODO Delay search results to reduce requests
 ** TODO Add unit tests against events
 *** TODO State changes
