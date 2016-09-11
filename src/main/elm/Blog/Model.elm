@@ -1,5 +1,6 @@
 module Blog.Model exposing ( init, update, view )
 
+import Blog.Pages exposing ( Page )
 import Blog.Tag exposing ( Tag )
 import Blog.Types exposing ( Post )
 import Html exposing ( Html )
@@ -8,6 +9,7 @@ import Task exposing ( Task )
 import Blog.Api              as Api
 import Html.App              as Html
 import                          Http
+import Blog.Pages            as Pages
 import                          Task
 import Blog.View             as View
 
@@ -18,7 +20,8 @@ type alias Model = {
 init : (Model, Cmd Event)
 init = (
     { content = View.Empty },
-    Task.perform identity identity (Task.succeed (ViewEvent (View.ShowPosts { searchTerms = "" })))
+    -- TODO: pageSize
+    Task.perform identity identity (Task.succeed (ViewEvent (View.ShowPosts { searchTerms = "", page = Pages.one 10 })))
     )
 
 type Event
@@ -26,6 +29,8 @@ type Event
     | FetchedPosts
         { searchTerms : String
         , posts : List Post
+        , page : Page
+        , totalPages : Int
         }
     | FetchedPost
         { post : Post
@@ -33,6 +38,8 @@ type Event
     | FetchedTag
         { tag : Tag
         , posts : List Post
+        , page : Page
+        , totalPages : Int
         }
     | FetchedTagCounts
         { tagCounts : List (Tag, Int)
@@ -43,15 +50,17 @@ type Event
     -- TODO: What failed?
     | FailedFetch String
 
--- TODO: Remove
-pageOne = { page = 1, pageSize = 10 }
-
 update : Api.Client -> Event -> Model -> (Model, Cmd Event)
 update client event model = let unimplemented = (model, Cmd.none) in case event of
-    (ViewEvent (View.ShowPosts { searchTerms })) -> withPostsTask
+    (ViewEvent (View.ShowPosts { searchTerms, page })) -> withPostsTask
         model
-        (client.searchPosts searchTerms pageOne)
-        (\posts -> FetchedPosts { searchTerms = searchTerms, posts = posts })
+        (client.searchPosts searchTerms page)
+        (\(totalPages, posts) -> FetchedPosts {
+            searchTerms = searchTerms,
+            posts = posts,
+            page = page,
+            totalPages = totalPages
+        })
 
     -- TODO: Add API method
     (ViewEvent (View.ShowPost { postId })) -> model `withTask`
@@ -59,10 +68,15 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
             (\post -> FetchedPost { post = post })
             (client.postbyId postId)
 
-    (ViewEvent (View.ShowTag { tag })) -> withPostsTask
+    (ViewEvent (View.ShowTag { tag, page })) -> withPostsTask
         model
-        (client.postsByTag tag pageOne)
-        (\posts -> FetchedTag { tag = tag, posts = posts })
+        (client.postsByTag tag page)
+        (\(totalPages, posts) -> FetchedTag {
+            tag = tag,
+            posts = posts,
+            page = page,
+            totalPages = totalPages
+        })
 
 
     -- TODO: Add API method
@@ -76,18 +90,23 @@ update client event model = let unimplemented = (model, Cmd.none) in case event 
             (\content -> FetchedAbout { content = content })
             client.about
 
-    (FetchedPosts { searchTerms, posts }) -> model `withContent` (View.PostsContent {
-        searchTerms = searchTerms,
-        posts = posts
-    })
+    (FetchedPosts { searchTerms, posts, page, totalPages }) -> model `withContent`
+        (View.PostsContent {
+            searchTerms = searchTerms,
+            posts = posts,
+            page = page,
+            totalPages = totalPages
+        })
 
     (FetchedPost { post }) -> model `withContent` (View.PostContent {
         post = post
     })
 
-    (FetchedTag { tag, posts }) -> model `withContent` (View.TagContent {
+    (FetchedTag { tag, posts, page, totalPages }) -> model `withContent` (View.TagContent {
         tag = tag,
-        posts = posts
+        posts = posts,
+        page = page,
+        totalPages = totalPages
     })
 
     (FetchedTagCounts { tagCounts }) -> model `withContent` (View.TagsContent tagCounts)
@@ -102,7 +121,7 @@ withContent model content = ({ model | content = content }, Cmd.none)
 withTask : Model -> Task String Event -> (Model, Cmd Event)
 withTask model task = (model, Task.perform FailedFetch identity task)
 
-withPostsTask : Model -> Task String (List Post) -> (List Post -> Event) -> (Model, Cmd Event)
+withPostsTask : Model -> Task String ((Int, List Post)) -> ((Int, List Post) -> Event) -> (Model, Cmd Event)
 withPostsTask model task transform = model `withTask` (Task.map transform task)
 
 view : Model -> Html Event

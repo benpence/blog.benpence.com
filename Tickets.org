@@ -65,18 +65,23 @@ CLOSED: [2016-09-07 Wed 22:08]
 CLOSED: [2016-09-07 Wed 22:16]
 *** DONE Render About content
 CLOSED: [2016-09-07 Wed 22:16]
-** DOING Pagination server and client side
+** DONE Pagination server and client side
+CLOSED: [2016-09-10 Sat 20:35]
 *** DONE Add server support
 CLOSED: [2016-09-08 Thu 22:55]
 *** DONE Add frontend API support
 CLOSED: [2016-09-08 Thu 22:55]
-*** TODO Add buttons in UI for page 1
-*** TODO Connect frontend client API to UI
-** TODO Delay search results to reduce requests
+*** DONE Add buttons in UI for page 1
+CLOSED: [2016-09-10 Sat 20:23]
+*** DONE Connect frontend client API to UI
+CLOSED: [2016-09-10 Sat 20:23]
+** TODO Add frontend cache
+*** TODO Api.Client as part af Model. Client methods yield new client
+*** TODO Make server-side API changes for selective reading
+*** TODO Time/space-based expiration?
 ** TODO Add unit tests against events
 *** TODO State changes
 *** TODO Research how other people do view tests
-** TODO Add search box for listing posts that match query
 ** TODO Better handling of failed fetches
 ** After thoughts
 *** DONE Reduce property-based FilesTest duration
@@ -85,6 +90,7 @@ CLOSED: [2016-09-01 Thu 22:23]
 Use "The Title: Revision 1.md" and "The Title: Revision 2.md" or something similar
 *** TODO Blog Server feature tests
 *** TODO Normalize frontend cache
+*** TODO Delay search results to reduce requests
 * TODO Read Only Mode Version 2
 ** TODO Create persistent store
 MySQL or SQLlite. Don't actually add API write path

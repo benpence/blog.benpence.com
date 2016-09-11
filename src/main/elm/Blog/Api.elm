@@ -1,6 +1,7 @@
 module Blog.Api exposing ( Client, remoteClient )
 
-import Blog.Types exposing ( Page, Post, PostId(..) )
+import Blog.Pages exposing ( Page )
+import Blog.Types exposing ( Post, PostId(..) )
 import Blog.Tag exposing ( Tag )
 import Task exposing ( Task )
 
@@ -11,8 +12,8 @@ import                          Result
 import                          Task
 
 type alias Client = {
-    searchPosts : String -> Page -> Task String (List Post),
-    postsByTag : Tag -> Page -> Task String (List Post),
+    searchPosts : String -> Page -> Task String (Int, List Post),
+    postsByTag : Tag -> Page -> Task String (Int, List Post),
     postbyId : PostId -> Task String Post,
     tagCounts : Task String (List (Tag, Int)),
     about : Task String String
@@ -28,7 +29,7 @@ remoteClient = {
     about = remoteAbout
   }
 
-remoteSearchPosts : String -> Page -> Task String (List Post)
+remoteSearchPosts : String -> Page -> Task String (Int, List Post)
 remoteSearchPosts searchTerms page =
   let
     url = remoteSearchPostsUrl searchTerms page
@@ -36,7 +37,7 @@ remoteSearchPosts searchTerms page =
   in
      toString
          `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << Result.map snd << decode)
+         `Task.andThen` (Task.fromResult << decode)
 
 remoteSearchPostsUrl : String -> Page -> String
 remoteSearchPostsUrl searchTerms page =
@@ -48,7 +49,7 @@ remoteSearchPostsUrl searchTerms page =
 
 remoteSearchPostsPath = "/api/post/search"
 
-remotePostsByTag : Tag -> Page -> Task String (List Post)
+remotePostsByTag : Tag -> Page -> Task String (Int, List Post)
 remotePostsByTag tag page =
   let
     url = remotePostsByTagUrl tag page
@@ -56,7 +57,7 @@ remotePostsByTag tag page =
   in
      toString
          `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << Result.map snd << decode)
+         `Task.andThen` (Task.fromResult << decode)
 
 remotePostsByTagUrl : Tag -> Page -> String
 remotePostsByTagUrl tag page =

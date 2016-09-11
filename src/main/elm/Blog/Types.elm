@@ -17,8 +17,3 @@ type alias Post = {
     tags          : List String,
     content       : String
 }
-
-type alias Page = {
-    page : Int,
-    pageSize : Int
-}
