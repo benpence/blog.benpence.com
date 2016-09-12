@@ -2,6 +2,10 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+.navbar {
+  margin-bottom: 0px;
+}
+
 .search-box {
   display: table;
 }
