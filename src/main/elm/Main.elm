@@ -8,6 +8,6 @@ main =
     App.program {
         init = Model.init,
         view = Model.view,
-        update = Model.update Api.remoteClient,
+        update = Model.update (Api.remoteClient Api.emptyCache),
         subscriptions = \_ -> Sub.none
     }

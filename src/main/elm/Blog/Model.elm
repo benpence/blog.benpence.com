@@ -14,12 +14,13 @@ import                          Task
 import Blog.View             as View
 
 type alias Model = {
+    client : Api.Client,
     content : View.Content
 }
 
-init : (Model, Cmd Event)
-init = (
-    { content = View.Empty },
+init : Api.Client -> (Model, Cmd Event)
+init client = (
+    { client = client, content = View.Empty },
     -- TODO: pageSize
     Task.perform identity identity (Task.succeed (ViewEvent (View.ShowPosts { searchTerms = "", page = Pages.one 10 })))
     )

@@ -29,10 +29,10 @@ post = Json.object6 Post
 tag : Decoder Tag
 tag = Json.map (\name -> { name = name }) Json.string
 
-tagCount : Decoder (Tag, Int)
+tagCount : Decoder (Tag, List PostId)
 tagCount = Json.object2 (,)
     ("tag"            := tag)
-    ("count"          := Json.int)
+    ("posts"          := Json.list postId)
 
 posts : Decoder (Int, List Post)
 posts = Json.object2 (,)
