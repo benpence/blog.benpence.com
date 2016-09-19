@@ -1,8 +1,8 @@
 #!/bin/bash
-ELM_MAKE="./node_modules/.bin/elm-make"
+PATH="$PATH:./node_modules/.bin/"
 
 frontend_package() {
-  $ELM_MAKE src/main/elm/Main.elm --output src/main/resources/web/static/index.js
+  pulp build --to src/main/resources/web/static/index.js
 }
 
 package() {
