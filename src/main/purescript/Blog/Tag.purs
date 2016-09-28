@@ -10,9 +10,9 @@ import Halogen (ComponentHTML)
 import Prelude
 
 import Data.Array                                as Array
-import Halogen.HTML.Events                       as Events
-import Halogen.HTML                              as H
-import Halogen.HTML.Properties                   as P
+import Halogen.HTML.Events.Indexed               as E
+import Halogen.HTML.Indexed                      as H
+import Halogen.HTML.Properties.Indexed           as P
 import Data.Tuple                                as Tuple
 
 type Tag = { name :: String }
@@ -25,7 +25,7 @@ renderButtons tags =
 
 renderButton :: Tag -> ComponentHTML Event
 renderButton tag =
-    H.a [classes, Events.onClick (Events.input_ (Clicked tag))] [
+    H.a [classes, E.onClick (E.input_ (Clicked tag))] [
         H.text tag.name
     ]
   where
@@ -44,6 +44,6 @@ renderCounts tagCounts =
 
 renderCount :: (Tuple Tag Int) -> (ComponentHTML Event)
 renderCount (Tuple tag count) =
-    H.button [Events.onClick (Events.input_ (Clicked tag)), P.classes [H.className "tag-count", H.className "list-group-item"]] [
+    H.button [E.onClick (E.input_ (Clicked tag)), P.classes [H.className "tag-count", H.className "list-group-item"]] [
         H.text (tag.name <> " (" <> show count <> ")")
     ]

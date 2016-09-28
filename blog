@@ -2,7 +2,7 @@
 PATH="$PATH:./node_modules/.bin/"
 
 frontend_package() {
-  pulp build --to src/main/resources/web/static/index.js
+  pulp build -O --to src/main/resources/web/static/index.js
 }
 
 package() {

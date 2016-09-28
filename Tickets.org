@@ -75,6 +75,15 @@ CLOSED: [2016-09-08 Thu 22:55]
 CLOSED: [2016-09-10 Sat 20:23]
 *** DONE Connect frontend client API to UI
 CLOSED: [2016-09-10 Sat 20:23]
+** DOING Convert to Purescript + Halogen
+*** DONE Tag
+CLOSED: [2016-09-21 Wed 20:23]
+*** DOING Header
+*** TODO Posts
+*** TODO Add tests for Tag, Header, Posts
+*** TODO View
+*** TODO Json, Markdown
+*** TODO Api
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading
