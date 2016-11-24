@@ -57,6 +57,10 @@ a:hover {
 }
 
 /* Pagination */
+.pagination {
+  margin: 0px;
+}
+
 .pagination > li > a,
 .pagination > li > span {
   background-color: #fff;
@@ -99,4 +103,75 @@ a:hover {
   background-color: #000;
   color: #fff;
   border-color: #000;
+}
+
+
+.navbar {
+  background-color: #fff;
+}
+
+.navbar .navbar-nav > li        > a {
+  background-color: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
+/* Inverted for active & hover */
+.navbar .navbar-nav > li.active > a       ,
+.navbar .navbar-nav > li.active > a:hover ,
+.navbar .navbar-nav > li        > a:hover {
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+}
+
+.input-group, .input-group-addon {
+  background-color: #000;
+  color: #fff;
+}
+
+.navbar * {
+  /* Get rid of search icon round corners */
+  border-radius: 0px;
+}
+
+/* Tags */
+button.tag-count {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+button.tag-count {
+  color: #000;
+}
+
+.tag-count:first-child ,
+.tag-count:last-child {
+  border-radius: 0px;
+}
+
+button.tag-count:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+:first-child > h1 {
+  margin-top: 0px;
+}
+
+/* Post */
+.post-tags {
+  padding-left: 5px;
+}
+
+.post-tag {
+  margin-left: 2px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 0px;
+}
+
+.post-tag:hover {
+  background-color: #000;
+  color: #fff;
 }

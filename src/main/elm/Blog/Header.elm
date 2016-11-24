@@ -26,13 +26,13 @@ view header =
         _ -> False
   in
     nav [class "row navbar navbar-default"] [
-        div [class "navbar-header"] [
+        div [class "navbar-header", style [("margin-right", "15px")]] [
             ul [class "nav navbar-nav"] (List.map (\b -> viewButton b (isActive b)) buttons)
         ],
 
         div [class "navbar-form"] [
             div [class "form-group", style [("display", "inline")]] [
-                div [class "input-group", style [("display", "table")]] [
+                div [class "input-group", style [("display", "table"), ("left-margin", "15px")]] [
                     span [class "input-group-addon", style [("width", "1%")]] [
                          span [class "glyphicon glyphicon-search"] []
                     ],
