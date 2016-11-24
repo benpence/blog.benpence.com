@@ -48,6 +48,7 @@ render header =
         ],
 
         H.div [classes ["navbar-form"]] [
+            -- TODO: Add these inline styles
             H.div [classes ["form-group"]{-, style [("display", "inline")]-}] [
                 H.div [classes ["input-group"]{-, style [("display", "table")]-}] [
                     H.span [classes ["input-group-addon"]{-, style [("width", "1%")]-}] [
@@ -81,8 +82,13 @@ renderButton button@(Button { name }) isActive =
             ]
         ]
 
+postsButton :: Button
 postsButton = Button { name: "Posts" }
+
+tagsButton :: Button
 tagsButton  = Button { name: "Tags" }
+
+aboutButton :: Button
 aboutButton = Button { name: "About" }
 
 buttons :: Array Button
