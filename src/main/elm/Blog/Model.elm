@@ -7,7 +7,7 @@ import Html exposing ( Html )
 import Task exposing ( Task )
 
 import Blog.Api              as Api
-import Html.App              as Html
+import Html                  as Html
 import                          Http
 import Blog.Pages            as Pages
 import                          Task

@@ -36,8 +36,8 @@ remoteSearchPosts searchTerms page =
     decode = decodeResponse Decode.posts
   in
      toString
-         `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+         |> Task.mapError Http.getString url
+         |> Task.andThen (Task.fromResult << decode)
 
 remoteSearchPostsUrl : String -> Page -> String
 remoteSearchPostsUrl searchTerms page =
@@ -56,8 +56,8 @@ remotePostsByTag tag page =
     decode = decodeResponse Decode.posts
   in
      toString
-         `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+         |> Task.mapError Http.getString url
+         |> Task.andThen (Task.fromResult << decode)
 
 remotePostsByTagUrl : Tag -> Page -> String
 remotePostsByTagUrl tag page =
@@ -76,8 +76,8 @@ remotePostById id =
     decode = decodeResponse Decode.post
   in
      toString
-         `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+         |> Task.mapError Http.getString url
+         |> Task.andThen (Task.fromResult << decode)
 
 remotePostByIdUrl : PostId -> String
 remotePostByIdUrl (PostId id) =
@@ -93,15 +93,15 @@ remoteTagCounts =
     decode = decodeResponse (Json.list Decode.tagCount)
   in
      toString
-         `Task.mapError` Http.getString remoteTagCountsPath
-         `Task.andThen` (Task.fromResult << decode)
+         |> Task.mapError Http.getString remoteTagCountsPath
+         |> Task.andThen (Task.fromResult << decode)
 
 remoteTagCountsPath = "/api/tagcounts"
 
 remoteAbout : Task String String
 remoteAbout =
      toString
-         `Task.mapError` Http.getString remoteAboutPath
+         |> Task.mapError Http.getString remoteAboutPath
 
 remoteAboutPath = "/static/About.md"
 
@@ -111,7 +111,7 @@ decodeResponse decoder input =
     successes = Json.decodeString (Json.at ["results"] decoder) input
     errors input =
         Json.decodeString (Json.at ["errors"] (Json.list Json.string)) input
-            `Result.andThen` (Err << toString)
+            |> Result.andThen (Err << toString)
   in
     case successes of
         Ok results -> Ok results

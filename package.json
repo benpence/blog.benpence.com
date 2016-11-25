@@ -10,7 +10,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "elm": "^0.17.1"
   },
   "devDependencies": {
   }

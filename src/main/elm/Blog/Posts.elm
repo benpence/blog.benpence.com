@@ -8,7 +8,7 @@ import Html.Events exposing ( onClick )
 
 import                          Date
 import Blog.Decode           as Decode
-import Html.App              as Html
+import Html                  as Html
 import Blog.Markdown         as Markdown
 import Blog.Tag              as Tag
 
