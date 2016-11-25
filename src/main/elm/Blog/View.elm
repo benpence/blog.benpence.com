@@ -140,7 +140,10 @@ viewBody content = case content of
         ]
     ]
 
-    (AboutContent { content }) -> singleRowCol [Markdown.render content]
+    (AboutContent { content }) -> singleRowCol [
+      Posts.viewTitle [span [] [text "About"]],
+      Posts.viewContent content
+    ]
 
 fromPostsEvent : Posts.Event -> Event
 fromPostsEvent event = case event of

@@ -1,4 +1,4 @@
-module Blog.Posts exposing ( Event(..), view )
+module Blog.Posts exposing ( Event(..), view, viewContent, viewTitle )
 
 import Blog.Tag exposing ( Tag )
 import Blog.Types exposing ( Post, PostId )
@@ -26,7 +26,7 @@ viewPost post =
     tags = List.map (\name -> { name = name }) post.tags
   in
     div [class "post"] [
-        h1 [class "post-title"] [
+        viewTitle  [
             a [onClick (PostClicked post.id)] [text post.title]
         ],
 
@@ -37,11 +37,14 @@ viewPost post =
             Html.map fromTagEvent (Tag.viewButtons tags)
         ],
 
-        div [class "post-content"] [viewContent post.content]
+        viewContent post.content
     ]
 
+viewTitle : List (Html a) -> Html a
+viewTitle = h1 [class "post-title"]
+
 viewContent : String -> Html a
-viewContent = Markdown.render
+viewContent content = div [class "post-content"] [Markdown.render content]
 
 viewTimestamp : Int -> String
 viewTimestamp epochMillis =
