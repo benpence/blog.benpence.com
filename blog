@@ -1,24 +1,45 @@
 #!/bin/bash
-ELM_MAKE="./node_modules/.bin/elm-make"
+PATH="./node_modules/.bin/:$PATH"
 
-frontend_package() {
-  $ELM_MAKE src/main/elm/Main.elm --output src/main/resources/web/static/index.js
+install_client() {
+  npm install
+  elm-package install -y
 }
 
-package() {
-  frontend_package
+install_server() {
+  sbt update
+}
+
+install() {
+  install_client
+  install_server
+}
+
+package_client() {
+  elm-make src/main/elm/Main.elm --output src/main/resources/web/static/index.js
+}
+
+package_server() {
   sbt package
 }
 
-run() {
-  frontend_package
+package() {
+  package_client
+  package_server
+}
 
+run_server() {
   sbt 'run com.benpence.blog.server.MainBlogServer
     -file.posts data/posts.yaml
     -file.users data/users.yaml
     --
     -local.doc.root=src/main/resources/web/
     '
+}
+
+run() {
+  package
+  run_server
 }
 
 die() {
@@ -35,6 +56,7 @@ check_dependency() {
 }
 
 check_dependencies() {
+  check_dependency npm
   check_dependency sbt
   check_dependency scalac
 }
@@ -45,10 +67,14 @@ main() {
   check_dependencies
 
   case "$command" in
-    "install") npm install ;;
-    "package") package ;;
-    "run") run ;;
-    *) echo "Unrecognized command \"$command\""; exit 1 ;;
+    "install_client") install_client ;;
+    "install_server") install_server ;;
+    "install")        install ;;
+    "package_client") package_client ;;
+    "package_server") package_server ;;
+    "package")        package ;;
+    "run")            run ;;
+    *) die 1 "Unrecognized command \"$command\""
   esac
 }
 

@@ -75,6 +75,11 @@ CLOSED: [2016-09-08 Thu 22:55]
 CLOSED: [2016-09-10 Sat 20:23]
 *** DONE Connect frontend client API to UI
 CLOSED: [2016-09-10 Sat 20:23]
+** DOING Routing
+*** TODO Create routing experiment with forwards/backwards
+*** TODO Decide routing convention
+*** TODO Create route path injection
+*** TODO Hook up top-level state changes to routes
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading
