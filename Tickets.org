@@ -76,7 +76,7 @@ CLOSED: [2016-09-10 Sat 20:23]
 *** DONE Connect frontend client API to UI
 CLOSED: [2016-09-10 Sat 20:23]
 ** DOING Routing
-*** TODO Create routing experiment with forwards/backwards
+*** DOING Create routing experiment with forwards/backwards
 *** TODO Decide routing convention
 *** TODO Create route path injection
 *** TODO Hook up top-level state changes to routes
