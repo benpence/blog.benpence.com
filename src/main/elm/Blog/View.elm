@@ -141,7 +141,7 @@ viewBody content = case content of
     ]
 
     (AboutContent { content }) -> singleRowCol [
-      Posts.viewTitle [span [] [text "About"]],
+      Posts.viewTitle [text "About"],
       Posts.viewContent content
     ]
 

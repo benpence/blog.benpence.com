@@ -2,31 +2,18 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-.search-box {
-  display: table;
-}
-
-/* First post */
-.post:first-child > h1 {
-  margin-top: 0px;
-}
 .post-title {
   font-size: 120px;
   font-weight: bold;
   color: #000;
+
+  /* Hover background shouldn't overlap tags */
+  margin-bottom: 0px;
 }
 
 a {
   color: #000;
   cursor: pointer;
-}
-
-.post-content a {
-  text-decoration: underline;
-}
-
-a:visited {
-  color: #000;
 }
 
 a:hover {
@@ -35,7 +22,17 @@ a:hover {
   background-color: #000;
 }
 
+a:visited {
+  color: #000;
+}
+
+/* Make links obvious in content */
+.post-content a {
+  text-decoration: underline;
+}
+
 .post-date-tags {
+  padding-top: 16px;
   padding-bottom: 10px;
 }
 .post-date {
@@ -64,6 +61,8 @@ a:hover {
 /* Pagination */
 .pagination {
   margin: 0px;
+  /* Avoid .post-title overlap */
+  margin-bottom: 15px;
 }
 
 .pagination > li > a,
@@ -142,12 +141,17 @@ a:hover {
 
 /* Tags */
 button.tag-count {
+  color: #000;
   padding-top: 6px;
   padding-bottom: 6px;
 }
 
-button.tag-count {
-  color: #000;
+button.tag-count:not(:hover) {
+  -webkit-transition: background-color 300ms ease-out;
+  -moz-transition:    background-color 300ms ease-out;
+  -o-transition:      background-color 300ms ease-out;
+  -ms-transition:     background-color 300ms ease-out;
+  transition:         background-color 300ms ease-out;
 }
 
 .tag-count:first-child ,
@@ -166,7 +170,7 @@ button.tag-count:hover {
 
 /* Post */
 .post-tags {
-  padding-left: 5px;
+  padding-left: 2px;
 }
 
 .post-tag {
