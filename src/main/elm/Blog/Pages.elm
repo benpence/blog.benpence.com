@@ -21,7 +21,7 @@ one pageSize = { page = 1, pageSize = pageSize }
 view : (Int -> a) -> PageOptions -> Html a
 view pageEvent options =
     nav [] [
-        viewPages pageEvent options.title options.currentPage [1..options.totalPages]
+        viewPages pageEvent options.title options.currentPage (List.range 1 options.totalPages)
     ]
 
 viewPages : (Int -> a) -> String -> Int -> List Int -> Html a

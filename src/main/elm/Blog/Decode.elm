@@ -2,7 +2,7 @@ module Blog.Decode exposing (..)
 
 import Blog.Types exposing ( Post, PostId(..), User, UserId(..) )
 import Blog.Tag exposing ( Tag )
-import Json.Decode exposing ( Decoder, (:=) )
+import Json.Decode exposing ( Decoder )
 
 import Json.Decode           as Json
 
@@ -10,31 +10,31 @@ userId : Decoder UserId
 userId = Json.map UserId Json.int
 
 user : Decoder User
-user = Json.object2 User
-    ("id"             := userId)
-    ("name"           := Json.string)
+user = Json.map2 User
+    (Json.field "id"             userId)
+    (Json.field "name"           Json.string)
 
 postId : Decoder PostId
 postId = Json.map PostId Json.int
 
 post : Decoder Post
-post = Json.object6 Post
-    ("id"             := postId)
-    ("author"         := user)
-    ("title"          := Json.string)
-    ("created_millis" := Json.int)
-    ("tags"           := (Json.list Json.string))
-    ("content"        := Json.string)
+post = Json.map6 Post
+    (Json.field "id"             postId)
+    (Json.field "author"         user)
+    (Json.field "title"          Json.string)
+    (Json.field "created_millis" Json.int)
+    (Json.field "tags"           (Json.list Json.string))
+    (Json.field "content"        Json.string)
 
 tag : Decoder Tag
 tag = Json.map (\name -> { name = name }) Json.string
 
 tagCount : Decoder (Tag, Int)
-tagCount = Json.object2 (,)
-    ("tag"            := tag)
-    ("count"          := Json.int)
+tagCount = Json.map2 (,)
+    (Json.field "tag"            tag)
+    (Json.field "count"          Json.int)
 
 posts : Decoder (Int, List Post)
-posts = Json.object2 (,)
-    ("total_pages"    := Json.int)
-    ("posts"          := (Json.list post))
+posts = Json.map2 (,)
+    (Json.field "total_pages"    Json.int)
+    (Json.field "posts"          (Json.list post))

@@ -9,7 +9,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput )
 
 import Blog.Header           as Header
-import Html.App              as Html
+import Html                  as Html
 import Blog.Pages            as Pages
 import Blog.Posts            as Posts
 import Blog.Markdown         as Markdown

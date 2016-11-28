@@ -39,7 +39,7 @@ view header =
 
                     input [
                         onInput NewSearchTerms,
-                        type' "text",
+                        type_ "text",
                         class "form-control",
                         placeholder searchPlaceholder
                     ] []

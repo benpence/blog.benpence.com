@@ -6,6 +6,7 @@ import Blog.Tag exposing ( Tag )
 import Task exposing ( Task )
 
 import Blog.Decode           as Decode
+import Blog.Deprecated       as Deprecated
 import                          Http
 import Json.Decode           as Json
 import                          Result
@@ -29,81 +30,71 @@ remoteClient = {
     about = remoteAbout
   }
 
+-- searchPosts
 remoteSearchPosts : String -> Page -> Task String (Int, List Post)
 remoteSearchPosts searchTerms page =
-  let
-    url = remoteSearchPostsUrl searchTerms page
-    decode = decodeResponse Decode.posts
-  in
-     toString
-         `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+    getJson (remoteSearchPostsUrl searchTerms page) Decode.posts
 
 remoteSearchPostsUrl : String -> Page -> String
 remoteSearchPostsUrl searchTerms page =
-    Http.url remoteSearchPostsPath [
-        ("query_string", Http.uriEncode searchTerms),
+    Deprecated.url remoteSearchPostsPath [
+        ("query_string", Http.encodeUri searchTerms),
         ("page", toString page.page),
         ("page_size", toString page.pageSize)
     ]
 
 remoteSearchPostsPath = "/api/post/search"
 
+-- postsByTag
 remotePostsByTag : Tag -> Page -> Task String (Int, List Post)
 remotePostsByTag tag page =
-  let
-    url = remotePostsByTagUrl tag page
-    decode = decodeResponse Decode.posts
-  in
-     toString
-         `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+    getJson (remotePostsByTagUrl tag page) Decode.posts
 
 remotePostsByTagUrl : Tag -> Page -> String
 remotePostsByTagUrl tag page =
-    Http.url remotePostsByTagPath [
-        ("tag", Http.uriEncode tag.name),
+    Deprecated.url remotePostsByTagPath [
+        ("tag", Http.encodeUri tag.name),
         ("page", toString page.page),
         ("page_size", toString page.pageSize)
     ]
 
 remotePostsByTagPath = "/api/post/by_tag"
 
+-- postsById
 remotePostById : PostId -> Task String Post
 remotePostById id =
-  let
-    url = remotePostByIdUrl id
-    decode = decodeResponse Decode.post
-  in
-     toString
-         `Task.mapError` Http.getString url
-         `Task.andThen` (Task.fromResult << decode)
+    getJson (remotePostByIdUrl id) Decode.post
 
 remotePostByIdUrl : PostId -> String
 remotePostByIdUrl (PostId id) =
-    Http.url remotePostByIdPath [
+    Deprecated.url remotePostByIdPath [
         ("post_id", toString id)
     ]
 
 remotePostByIdPath = "/api/post/by_id"
 
+-- tagCounts
 remoteTagCounts : Task String (List (Tag, Int))
 remoteTagCounts =
-  let
-    decode = decodeResponse (Json.list Decode.tagCount)
-  in
-     toString
-         `Task.mapError` Http.getString remoteTagCountsPath
-         `Task.andThen` (Task.fromResult << decode)
+    getJson remoteTagCountsPath (Json.list Decode.tagCount)
 
 remoteTagCountsPath = "/api/tagcounts"
 
+-- about
 remoteAbout : Task String String
-remoteAbout =
-     toString
-         `Task.mapError` Http.getString remoteAboutPath
+remoteAbout = Task.mapError toString (Http.toTask (Http.getString remoteAboutPath))
 
 remoteAboutPath = "/static/About.md"
+
+getJson : String -> Json.Decoder a -> Task String a
+getJson url decoder =
+  let
+    request = Http.getString url
+    decode = decodeResponse decoder
+  in
+    Http.toTask request
+        |> Task.mapError toString
+        |> Task.andThen (Deprecated.fromResult << decode)
 
 decodeResponse : Json.Decoder a -> String -> Result String a
 decodeResponse decoder input =
@@ -111,7 +102,7 @@ decodeResponse decoder input =
     successes = Json.decodeString (Json.at ["results"] decoder) input
     errors input =
         Json.decodeString (Json.at ["errors"] (Json.list Json.string)) input
-            `Result.andThen` (Err << toString)
+            |> Result.andThen (Err << toString)
   in
     case successes of
         Ok results -> Ok results

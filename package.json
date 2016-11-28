@@ -9,9 +9,8 @@
   },
   "author": "",
   "license": "",
-  "dependencies": {
-    "elm": "^0.17.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "elm": "^0.18.0"
   }
 }
