@@ -73,6 +73,7 @@ main() {
     "package_client") package_client ;;
     "package_server") package_server ;;
     "package")        package ;;
+    "run_server")     run_server ;;
     "run")            run ;;
     *) die 1 "Unrecognized command \"$command\""
   esac

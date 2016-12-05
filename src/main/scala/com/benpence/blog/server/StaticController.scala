@@ -10,12 +10,13 @@ import com.twitter.finatra.http.Controller
   */
 class StaticController extends Controller {
 
-  get("/") { request: Request =>
-    response.ok.file("/static/index.html")
-  }
-
   get("/static/:*") { request: Request =>
     // Responds with Status.NotFound when file is not in JAR/filesystem
     response.ok.file(request.path)
+  }
+
+  // Let the front-end handle the path
+  get("/:*") { request: Request =>
+    response.ok.file("/static/index.html")
   }
 }

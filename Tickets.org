@@ -77,7 +77,8 @@ CLOSED: [2016-09-10 Sat 20:23]
 CLOSED: [2016-09-10 Sat 20:23]
 ** DONE elm 0.18 upgrade
 ** DOING Routing
-*** DOING Create routing experiment with forwards/backwards
+*** DONE Create routing experiment with forwards/backwards
+CLOSED: [2016-12-04 Sun 16:14]
 *** TODO Decide routing convention
 *** TODO Create route path injection
 *** TODO Hook up top-level state changes to routes
