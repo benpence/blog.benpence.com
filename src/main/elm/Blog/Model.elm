@@ -1,4 +1,4 @@
-module Blog.Model exposing ( init, update, view )
+module Blog.Model exposing ( init, update, view, ViewEvent )
 
 import Blog.Pages exposing ( Page )
 import Blog.Tag exposing ( Tag )
@@ -21,7 +21,7 @@ init : (Model, Cmd Event)
 init = (
     { content = View.Empty },
     -- TODO: pageSize
-    Task.attempt wrapFailure (Task.succeed (ViewEvent (View.ShowPosts { searchTerms = "", page = Pages.one 10 })))
+    Task.attempt wrapFailure (Task.succeed (ViewEvent (View.defaultView )))
     )
 
 type Event

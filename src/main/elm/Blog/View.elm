@@ -1,4 +1,4 @@
-module Blog.View exposing (Content(..), Event(..), view)
+module Blog.View exposing (Content(..), defaultView, Event(..), view)
 
 import Blog.Header exposing ( Header )
 import Blog.Pages exposing ( Page )
@@ -51,6 +51,11 @@ type Event
     }
     | ShowTags
     | ShowAbout
+
+defaultView : Int -> Event
+defaultView pageSize = ShowPosts
+    { searchTerms = ""
+    , page = Pages.one pageSize }
 
 view : Content -> Html Event
 view content =
