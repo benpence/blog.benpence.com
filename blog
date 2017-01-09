@@ -1,17 +1,21 @@
 #!/bin/bash
-ELM_MAKE="./node_modules/.bin/elm-make"
+PATH="$PATH:./node_modules/.bin/"
 
-frontend_package() {
-  $ELM_MAKE src/main/elm/Main.elm --output src/main/resources/web/static/index.js
+build_client() {
+  pulp build -O --to src/main/resources/web/static/index.js
 }
 
-package() {
-  frontend_package
+build_server() {
   sbt package
 }
 
+build() {
+  build_client
+  build_server
+}
+
 run() {
-  frontend_package
+  build_client
 
   sbt 'run com.benpence.blog.server.MainBlogServer
     -file.posts data/posts.yaml
@@ -47,6 +51,8 @@ main() {
   case "$command" in
     "install") npm install ;;
     "package") package ;;
+    "build-client") build_client ;;
+    "build-server") build_client ;;
     "run") run ;;
     *) echo "Unrecognized command \"$command\""; exit 1 ;;
   esac

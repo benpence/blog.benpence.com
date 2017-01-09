@@ -1,0 +1,19 @@
+{
+  "name": "blog.benpence.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-assert": "^1.0.0",
+    "purescript-console": "^1.0.0",
+    "purescript-halogen": "^0.11.0",
+    "purescript-lists": "^1.0.1",
+    "purescript-tuples": "^1.0.0"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^1.0.0"
+  }
+}
