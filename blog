@@ -1,6 +1,11 @@
 #!/bin/bash
 PATH="$PATH:./node_modules/.bin/"
 
+install() {
+  npm install --no-optional
+  bower install
+}
+
 build_client() {
   pulp build -O --to src/main/resources/web/static/index.js
 }
