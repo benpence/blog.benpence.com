@@ -75,7 +75,14 @@ CLOSED: [2016-09-08 Thu 22:55]
 CLOSED: [2016-09-10 Sat 20:23]
 *** DONE Connect frontend client API to UI
 CLOSED: [2016-09-10 Sat 20:23]
-** DOING elm 0.18 upgrade
+** DOING Purescript primitives
+*** DOING Halogen MVP
+*** TODO Lens
+** TODO Convert to Purescript + Halogen
+*** DONE Tag
+CLOSED: [2016-09-21 Wed 20:23]
+*** DONE Header
+CLOSED: [2016-10-22 Sat 22:25]
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading

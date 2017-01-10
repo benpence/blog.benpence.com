@@ -4,8 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/webpack-dev-server --content-base ./src/main/resources/web/",
-    "test": "./node_modules/.bin/jest"
   },
   "author": "",
   "license": "",

@@ -20,8 +20,6 @@ build() {
 }
 
 run() {
-  build_client
-
   sbt 'run com.benpence.blog.server.MainBlogServer
     -file.posts data/posts.yaml
     -file.users data/users.yaml
@@ -54,7 +52,7 @@ main() {
   check_dependencies
 
   case "$command" in
-    "install") npm install ;;
+    "install") install ;;
     "package") package ;;
     "build-client") build_client ;;
     "build-server") build_client ;;
