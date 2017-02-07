@@ -76,8 +76,10 @@ CLOSED: [2016-09-10 Sat 20:23]
 *** DONE Connect frontend client API to UI
 CLOSED: [2016-09-10 Sat 20:23]
 ** DOING Purescript primitives
-*** DOING Halogen MVP
-*** TODO Lens
+*** DONE Halogen MVP
+CLOSED: [2017-01-10 Tue 22:52]
+*** DONE Lens
+CLOSED: [2017-01-24 Tue 19:27]
 ** TODO Convert to Purescript + Halogen
 *** DONE Tag
 CLOSED: [2016-09-21 Wed 20:23]
