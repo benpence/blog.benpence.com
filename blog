@@ -7,7 +7,16 @@ install() {
 }
 
 build_client() {
-  pulp build -O --to src/main/resources/web/static/index.js
+  if [ $# -gt 0 ]; then
+    local src_path="$1" && shift
+  else
+    local src_path="src/main/purescript/"
+  fi
+
+  pulp browserify \
+    --src-path $src_path \
+    --optimise \
+    --to src/main/resources/web/static/index.js
 }
 
 build_server() {
@@ -52,11 +61,11 @@ main() {
   check_dependencies
 
   case "$command" in
-    "install") install ;;
-    "package") package ;;
-    "build-client") build_client ;;
-    "build-server") build_client ;;
-    "run") run ;;
+    "install") install $@;;
+    "package") package $@;;
+    "build-client") build_client $@ ;;
+    "build-server") build_client $@ ;;
+    "run") run $@ ;;
     *) echo "Unrecognized command \"$command\""; exit 1 ;;
   esac
 }
