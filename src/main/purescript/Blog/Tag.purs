@@ -1,29 +1,49 @@
 module Blog.Tag
-  ( Event(..)
+  ( component
+  , Query(..)
   , Tag
-  , renderButtons
-  , renderCounts
   ) where
 
-import Data.Tuple (Tuple(..))
-import Halogen (ComponentHTML)
+import Data.Maybe (Maybe(..))
+import Halogen (Component, ComponentDSL, ComponentHTML)
 import Prelude
 
-import Data.Array                                as Array
+import Halogen                                   as Halogen
 import Halogen.HTML.Events.Indexed               as E
 import Halogen.HTML.Indexed                      as H
 import Halogen.HTML.Properties.Indexed           as P
-import Data.Tuple                                as Tuple
 
 type Tag = { name :: String }
 
-data Event a = Clicked Tag a
+data Query a
+    = Clicked Tag a
+    | GetSelected (Maybe Tag -> a)
 
-renderButtons :: Array Tag -> ComponentHTML Event
-renderButtons tags =
-    H.span [P.class_ (H.className "post-tags")] (map renderButton tags)
+type State
+    = { tags :: Array Tag
+      , selected :: Maybe Tag
+      }
 
-renderButton :: Tag -> ComponentHTML Event
+initialState :: Array Tag -> State
+initialState tags = { tags: tags, selected: Nothing }
+
+component :: forall g. Component State Query g
+component = Halogen.component { render, eval }
+
+eval :: forall g. Query ~> ComponentDSL State Query g
+eval (Clicked tag next) = do
+    Halogen.modify (\state -> state { selected = Just tag })
+    -- TODO: Access API and emit event
+    pure next
+eval (GetSelected continue) = do
+    selected <- Halogen.gets _.selected
+    pure (continue selected)
+
+render :: State -> ComponentHTML Query
+render state =
+    H.span [P.class_ (H.className "post-tags")] (map renderButton state.tags)
+
+renderButton :: Tag -> ComponentHTML Query
 renderButton tag =
     H.a [classes, E.onClick (E.input_ (Clicked tag))] [
         H.text tag.name
@@ -34,16 +54,4 @@ renderButton tag =
         H.className "btn",
         H.className "btn-default",
         H.className "btn-xs"
-    ]
-
-renderCounts :: Array (Tuple Tag Int) -> ComponentHTML Event
-renderCounts tagCounts =
-    H.div [P.classes [H.className "tag-list", H.className "list-group"]] (
-        map renderCount (Array.sortBy (comparing (_.name <<< Tuple.fst)) tagCounts)
-    )
-
-renderCount :: (Tuple Tag Int) -> (ComponentHTML Event)
-renderCount (Tuple tag count) =
-    H.button [E.onClick (E.input_ (Clicked tag)), P.classes [H.className "tag-count", H.className "list-group-item"]] [
-        H.text (tag.name <> " (" <> show count <> ")")
     ]

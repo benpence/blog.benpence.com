@@ -85,6 +85,12 @@ CLOSED: [2017-01-24 Tue 19:27]
 CLOSED: [2016-09-21 Wed 20:23]
 *** DONE Header
 CLOSED: [2016-10-22 Sat 22:25]
+*** TODO Create body component
+*** TODO Glue together header, body into one complete view. No API yet
+*** TODO Create API experiment
+*** TODO Create API + Halogen experiment
+*** TODO Migrate API + Halogen experiment into main sourc
+*** TODO Research how where API attaches hierarchy
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading
