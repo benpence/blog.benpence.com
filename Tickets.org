@@ -80,12 +80,10 @@ CLOSED: [2016-09-10 Sat 20:23]
 CLOSED: [2017-01-10 Tue 22:52]
 *** DONE Lens
 CLOSED: [2017-01-24 Tue 19:27]
-** TODO Convert to Purescript + Halogen
-*** DONE Tag
-CLOSED: [2016-09-21 Wed 20:23]
-*** DONE Header
-CLOSED: [2016-10-22 Sat 22:25]
-*** DOING Create body component
+** TODO Convert to Purescript + Flare
+*** TODO Tag
+*** TODO Header
+*** TODO Create body component
 *** TODO Glue together header, body into one complete view. No API yet
 *** TODO Create API experiment
 *** TODO Create API + Halogen experiment

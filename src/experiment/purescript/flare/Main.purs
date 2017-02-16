@@ -1,37 +1,33 @@
 module Main where
-
 import Prelude
 
-import DOM (DOM)
-import Color (black, toHexString)
-import Signal.Channel (CHANNEL)
+import Text.Smolder.HTML as H
 import Text.Smolder.Markup ((!), text)
+import Text.Smolder.HTML.Attributes as A
 
-import Control.Monad.Eff (Eff)
-import Flare                                     as Flare
-import Flare.Smolder                             as Smolder
-import Text.Smolder.HTML                         as H
-import Text.Smolder.HTML.Attributes              as A
+import Color (black, toHexString)
 
+import Flare.Smolder (runFlareHTML)
+import Flare
 
-main :: Eff ("dom" :: DOM, "channel" :: CHANNEL) Unit
-main = Smolder.runFlareHTML "controls" "output" ui
+main = runFlareHTML "controls" "output" ui
 
 -- This is the full user interface definition:
-ui = markup <$> Flare.string    "Title"     "Try Flare!"
-            <*> Flare.color     "Color"     black
-            <*> Flare.intSlider "Font size" 5 50 26
-            <*> Flare.boolean   "Italic"    false
+ui = markup <$> string    "Title"     "Try Flare!"
+            <*> color     "Color"     black
+            <*> intSlider "Font size" 5 50 26
+            <*> boolean   "Italic"    false
+
 
 markup title color fontSize italic = do
-  H.h1 ! A.style ("Flare.color: " <> toHexString color <> ";" <>
+  H.h1 ! A.style ("color: " <> toHexString color <> ";" <>
                   "font-size: " <> show fontSize <> "px;" <>
                   "font-style: " <> if italic then "italic" else "normal")
        $ (text title)
 
   H.p $ text "The Flare library allows you to quickly create reactive web interfaces like the one above."
   H.p $ text $ "You can change the PureScript code in the editor on the left. " <>
-                 "For example, try to replace 'Flare.intSlider' by 'intRange'. " <>
+                 "For example, try to replace 'intSlider' by 'intRange'. " <>
                  "For something more challenging, try to add a slider to control the x-position ('margin-left') of the message."
   H.p $ do
     text "For help, see the "
