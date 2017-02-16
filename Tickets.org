@@ -85,7 +85,7 @@ CLOSED: [2017-01-24 Tue 19:27]
 CLOSED: [2016-09-21 Wed 20:23]
 *** DONE Header
 CLOSED: [2016-10-22 Sat 22:25]
-*** TODO Create body component
+*** DOING Create body component
 *** TODO Glue together header, body into one complete view. No API yet
 *** TODO Create API experiment
 *** TODO Create API + Halogen experiment

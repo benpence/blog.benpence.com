@@ -3,7 +3,7 @@ module Blog.TagCounts
   , Query(..)
   ) where
 
-import Blog.Tag (Tag)
+import Blog (Tag, TagCount)
 import Data.Maybe (Maybe(..))
 import Halogen (Component, ComponentDSL, ComponentHTML)
 import Prelude
@@ -13,8 +13,6 @@ import Halogen                                   as Halogen
 import Halogen.HTML.Events.Indexed               as E
 import Halogen.HTML.Indexed                      as H
 import Halogen.HTML.Properties.Indexed           as P
-
-type TagCount = { tag :: Tag, count :: Int }
 
 data Query a
     = Clicked Tag a
