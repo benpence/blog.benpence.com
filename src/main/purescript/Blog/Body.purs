@@ -73,8 +73,9 @@ derive instance ordChildSlot :: Ord ChildSlot
 --         -- ... snip ...
 --    ]
 
-render :: State -> ParentHTML TagList.State Query TagList.Query g ChildSlot
+render :: forall g . State -> ParentHTML TagList.State Query TagList.Query g ChildSlot
 render { content: Empty } = H.div_ []
+render _ = H.div_ []
 --render { content: PostsContent { searchTerms, posts, page, totalPages } } =
 --    singleRowCol [
 --        H.div [class "posts"] [
@@ -132,7 +133,7 @@ render { content: Empty } = H.div_ []
 --   modify (\_ -> { tickA: a, tickB: b })
 --   pure next
 
-eval :: Query ~> ParentDSL State TagList.State Query TagList.Query g ChildSlot
+eval :: forall g . Query ~> ParentDSL State TagList.State Query TagList.Query g ChildSlot
 eval (ShowPosts { searchTerms, page } next) = do
     pure next
 eval (ShowPost { postId } next) = do
@@ -144,5 +145,9 @@ eval (ShowTags next) = do
 eval (ShowAbout next) = do
     pure next
 
-peek :: forall x. Halogen.ChildF ChildSlot TagList.Query x -> ParentDSL State Task ListQuery TaskQuery g ChildSlot Unit
-peek _ = pure unit
+peek :: forall x . Halogen.ChildF ChildSlot TagList.Query x -> ParentDSL State Query TagList.Query g ChildSlot Unit
+peek (Halogen.ChildF slot (TagList.Clicked tag next)) =
+  let
+    action = ShowTag ({ tag: tag, page: { number: 1, size: 10 } })
+  in
+    eval (Halogen.action action)
