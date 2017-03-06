@@ -80,16 +80,18 @@ CLOSED: [2016-09-10 Sat 20:23]
 CLOSED: [2017-01-10 Tue 22:52]
 *** DONE Lens
 CLOSED: [2017-01-24 Tue 19:27]
-** TODO Convert to Purescript + Halogen
+** TODO Convert to Purescript + Pux
 *** DONE Tag
-CLOSED: [2016-09-21 Wed 20:23]
+CLOSED: [2017-02-19 Sun 12:47]
 *** DONE Header
-CLOSED: [2016-10-22 Sat 22:25]
-*** DOING Create body component
-*** TODO Glue together header, body into one complete view. No API yet
+CLOSED: [2017-02-19 Sun 12:47]
+*** DONE Create body component
+CLOSED: [2017-03-05 Sun 16:04]
+*** DONE Glue together header, body into one complete view. No API yet
+CLOSED: [2017-03-05 Sun 16:04]
 *** TODO Create API experiment
-*** TODO Create API + Halogen experiment
-*** TODO Migrate API + Halogen experiment into main sourc
+*** TODO Create API + Pux experiment
+*** TODO Migrate API + Pux experiment into main source
 *** TODO Research how where API attaches hierarchy
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client

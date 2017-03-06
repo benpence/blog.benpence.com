@@ -1,36 +1,36 @@
 module Blog.Body
-  ( component
-  , Query(..)
+  ( Action(..)
   , State
+  , init
+  , view
   ) where
 
 import Blog (Page, Post, PostId, Tag, TagCount)
-import Data.Maybe (Maybe(..))
-import Halogen (Component, ParentDSL, ParentHTML)
+import Pux.Html (Html)
 import Prelude
 
-import Blog.TagList                              as TagList
-import Halogen                                   as Halogen
-import Halogen.HTML.Events.Indexed               as E
-import Halogen.HTML.Indexed                      as H
-import Halogen.HTML.Properties.Indexed           as P
+import Blog.Pages                                as Pages
+import Blog.Posts                                as Posts
+import Blog.TagCounts                            as TagCounts
+import Pux.Html                                  as H
+import Pux.Html.Attributes                       as A
 
-data Query a
+data Action
     = ShowPosts
       { searchTerms :: String
       , page :: Page
-      } a
+      }
     | ShowPost
       { postId :: PostId
-      } a
+      }
     | ShowTag
       { tag :: Tag
       , page :: Page
-      } a
-    | ShowTags a
-    | ShowAbout a
+      }
+    | ShowTags
+    | ShowAbout
 
-data Content
+data State 
     = Empty
     | PostContent {
         post :: Post
@@ -52,102 +52,77 @@ data Content
       { content :: String
       }
 
-type State =
-  { content  :: Content
-  }
+init :: State
+init = Empty
 
-initialState :: State
-initialState = { content: Empty }
-
-component :: forall g. Component State Query g
-component = Halogen.parentComponent { render, eval, peek }
-
-data ChildSlot = ContentSlot
-derive instance eqChildSlot :: Eq ChildSlot
-derive instance ordChildSlot :: Ord ChildSlot
-
-
---  H.div_
---    [ H.slot (TickSlot "A") \_ -> { component: ticker, initialState: TickState 100 }
---    , H.slot (TickSlot "B") \_ -> { component: ticker, initialState: TickState 0 }
---         -- ... snip ...
---    ]
-
-render :: forall g . State -> ParentHTML TagList.State Query TagList.Query g ChildSlot
-render { content: Empty } = H.div_ []
-render _ = H.div_ []
---render { content: PostsContent { searchTerms, posts, page, totalPages } } =
---    singleRowCol [
---        H.div [class "posts"] [
---            Pages.view
---                (\pageNumber -> ShowPosts {
---                    searchTerms = searchTerms,
---                    page = { page | page = pageNumber }
---                })
---                {
---                    totalPages = totalPages,
---                    currentPage = page.page,
---                    title =
---                        if searchTerms == "" then "Most Recent"
---                        else "Search \"" ++ searchTerms ++ "\""
---                },
---            Html.map fromPostsEvent (Posts.view posts)
---        ]
---    ]
---
---    (PostContent { post }) -> singleRowCol [
---        div [class "posts"] [
---            Html.map fromPostsEvent (Posts.view [post])
---        ]
---    ]
---
---    (TagContent { tag, posts, page, totalPages }) -> singleRowCol [
---        Pages.view
---            (\pageNumber -> ShowTag {
---                tag = tag,
---                page = { page | page = pageNumber }
---            })
---            {
---                totalPages = totalPages,
---                currentPage = page.page,
---                title = "Tag \"" ++ tag.name ++ "\""
---            },
---        Html.map fromPostsEvent (Posts.view posts)
---    ]
---
---    (TagsContent tags) ->  singleRowCol [
---        div [class "tag-list list-group"] [
---          Html.map fromTagEvent (Tag.viewCounts tags)
---        ]
---    ]
---
---    (AboutContent { content }) -> singleRowCol [
---      Posts.viewTitle [span [] [text "About"]],
---      Posts.viewContent content
---    ]
-
--- eval :: Query ~> ParentDSL State TickState Query TickQuery g TickSlot
--- eval (ReadTicks next) = do
---   a <- query (TickSlot "A") (request GetTick)
---   b <- query (TickSlot "B") (request GetTick)
---   modify (\_ -> { tickA: a, tickB: b })
---   pure next
-
-eval :: forall g . Query ~> ParentDSL State TagList.State Query TagList.Query g ChildSlot
-eval (ShowPosts { searchTerms, page } next) = do
-    pure next
-eval (ShowPost { postId } next) = do
-    pure next
-eval (ShowTag { tag, page } next) = do
-    pure next
-eval (ShowTags next) = do
-    pure next
-eval (ShowAbout next) = do
-    pure next
-
-peek :: forall x . Halogen.ChildF ChildSlot TagList.Query x -> ParentDSL State Query TagList.Query g ChildSlot Unit
-peek (Halogen.ChildF slot (TagList.Clicked tag next)) =
+view :: State -> Html Action
+view Empty = H.div [] []
+view (PostsContent { searchTerms, posts, page, totalPages }) =
   let
-    action = ShowTag ({ tag: tag, page: { number: 1, size: 10 } })
+    pageAction pageNumber = ShowPosts
+        { searchTerms: searchTerms
+        , page: page { number = pageNumber }
+        }
+
+    title =
+        if searchTerms == ""
+        then "Most Recent"
+        else "Search \"" <> searchTerms <> "\""
+    pagesState = Pages.init title totalPages page.number
   in
-    eval (Halogen.action action)
+    singleRowCol [
+        H.div [A.className "posts"] [
+            Pages.view pageAction pagesState,
+            map fromPostsAction (Posts.view (Posts.init posts))
+        ]
+    ]
+
+view (PostContent { post }) = singleRowCol [
+        H.div [A.className "posts"] [
+            map fromPostsAction (Posts.view (Posts.init [post]))
+        ]
+    ]
+
+view (TagContent { tag, posts, page, totalPages }) =
+  let
+    pageAction pageNumber = ShowTag
+        { tag: tag
+        , page: page { number = pageNumber }
+        }
+
+    pagesState = Pages.init ("Tag \"" <> tag.name <> "\"") totalPages page.number
+  in
+    singleRowCol [
+      Pages.view pageAction pagesState,
+      map fromPostsAction (Posts.view (Posts.init posts))
+    ]
+
+view (TagsContent tagCounts) =
+    singleRowCol [
+        H.div [A.className "tag-list list-group"] [
+          map fromTagAction (TagCounts.view (TagCounts.init tagCounts))
+        ]
+    ]
+
+view (AboutContent { content }) =
+    singleRowCol [
+        Posts.viewTitle [H.span [] [H.text "About"]],
+        map fromPostsAction (Posts.viewContent content)
+    ]
+
+singleRowCol :: forall a. Array (Html a) -> Html a
+singleRowCol content =
+    H.div [A.className "row"] [
+        H.div [A.className "col-lg-12"] content
+    ]
+
+fromPostsAction :: Posts.Action -> Action
+fromPostsAction (Posts.PostClicked postId) = ShowPost { postId: postId }
+-- TODO: pageSize
+fromPostsAction (Posts.TagClicked tag) = ShowTag { tag: tag, page: Pages.one 10 }
+-- TODO: Open page on link clicked
+fromPostsAction (Posts.LinkClicked url) = ShowTags
+
+-- TODO: pageSize
+fromTagAction :: TagCounts.Action -> Action
+fromTagAction (TagCounts.Clicked tag) = ShowTag { tag: tag, page: Pages.one 10 }

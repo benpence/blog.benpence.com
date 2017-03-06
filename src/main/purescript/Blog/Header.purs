@@ -1,37 +1,35 @@
 module Blog.Header
-  ( Button(..)
+  ( Action(..)
+  , Button(..)
+  , State
   , buttons
-  , component
-  , State(..)
-  , initialState
-  , Query(..)
-  , render
-) where
+  , init
+  , update
+  , view
+  ) where
 
-import Halogen (Component, ComponentDSL, ComponentHTML)
-import Halogen.HTML (className)
+import Data.Tuple (Tuple(..))
+import Pux.Html (Html)
 import Prelude
 
-import Halogen                                   as Halogen
-import Halogen.HTML.Events.Indexed               as E
-import Halogen.HTML.Indexed                      as H
-import Halogen.HTML.Properties.Indexed           as P
+import Pux.Html                                  as H
+import Pux.Html.Attributes                       as A
+import Pux.Html.Events                           as E
 
 newtype Button = Button { name :: String }
 derive instance eqButton :: Eq Button
 derive instance ordButton :: Ord Button
 
-data Query a
-    = Clicked Button a
-    | NewSearchTerms String a
-    | GetState (State -> a)
+data Action
+    = Clicked Button
+    | NewSearchTerms String
 
 data State
     = Selected Button
     | SearchTerms String
 
-initialState :: State
-initialState = Selected postsButton
+init :: State
+init = Selected postsButton
 
 postsButton :: Button
 postsButton = Button { name: "Posts" }
@@ -48,69 +46,56 @@ buttons = [postsButton, tagsButton, aboutButton]
 searchPlaceholder :: String
 searchPlaceholder = "Search for posts"
 
-component :: forall g. Component State Query g
-component = Halogen.component { render, eval }
+update :: Action -> State -> State
+update (Clicked button) _ = Selected button
+update (NewSearchTerms searchTerms) _ =
+    if searchTerms == ""
+    then init
+    else SearchTerms searchTerms
 
-eval :: forall g. Query ~> ComponentDSL State Query g
-eval (Clicked button next) = do
-  Halogen.set (Selected button)
-  -- TODO: Access API and emit event
-  pure next
-eval (NewSearchTerms searchTerms next) = do
-  Halogen.set (SearchTerms searchTerms)
-  -- TODO: Access API and emit event
-  pure next
-eval (GetState continue) = do
-  state <- Halogen.get
-  pure (continue state)
-
-render :: State -> ComponentHTML Query
-render header =
-    H.nav [classes ["row", "navbar", "navbar-default"]] [
-        H.div [classes ["navbar-header"]] [
-            H.ul [classes ["nav", "navbar-nav"]]
-                (map (\button -> renderButton button (isActive header button)) buttons) 
+view :: State -> Html Action
+view header =
+    H.nav [A.className "row", A.className "navbar", A.className "navbar-default"] [
+        H.div [A.className "navbar-header"] [
+            H.ul [A.className "nav", A.className "navbar-nav"] (map (\button ->
+                viewButton button (isActive header button))
+            buttons) 
         ],
 
-        H.div [classes ["navbar-form"]] [
-            -- TODO: Add these inline styles
-            H.div [classes ["form-group"]{-, style [("display", "inline")]-}] [
-                H.div [classes ["input-group"]{-, style [("display", "table")]-}] [
-                    H.span [classes ["input-group-addon"]{-, style [("width", "1%")]-}] [
-                        H.span [classes ["glyphicon", "glyphicon-search"]] []
+        H.div [A.className "navbar-form"] [
+            H.div [A.className "form-group", A.style [Tuple "display" "inline"]] [
+                H.div [A.className "input-group", A.style [Tuple "display" "table"]] [
+                    H.span [A.className "input-group-addon", A.style [Tuple "width" "1%"]] [
+                        H.span [A.className "glyphicon", A.className "glyphicon-search"] []
                     ],
 
                     H.input [
-                        classes ["form-control"],
-                        E.onValueInput (E.input NewSearchTerms),
-                        P.inputType P.InputText,
-                        P.value (searchBarText header),
-                        P.placeholder searchPlaceholder
-                    ]
+                        A.type_ "text",
+                        A.className "form-control",
+                        A.value (searchBarText header),
+                        E.onChange (NewSearchTerms <<< _.target.value)
+                    ] []
                 ]
             ]
         ]
     ]
 
-renderButton :: Button -> Boolean -> ComponentHTML Query
-renderButton button@(Button { name }) isActive =
+viewButton :: Button -> Boolean -> Html Action
+viewButton button@(Button { name }) isActive =
     if isActive then
-        H.li [classes ["active"]] [
-           H.a_ [
+        H.li [A.className "active"] [
+           H.a [] [
                 H.text name
            ]
         ]
     else
-        H.li_ [
-            H.a [E.onClick (E.input_ (Clicked button))] [
+        H.li [] [
+            H.a [E.onClick (const (Clicked button))] [
                 H.text name
             ]
         ]
 
-classes :: forall r i. Array String -> P.IProp (class :: P.I | r) i
-classes = P.classes <<< map className
-
-isActive :: forall a. State -> Button -> Boolean
+isActive :: State -> Button -> Boolean
 isActive (Selected selected) button | button == selected = true
 isActive _ _ = false
 

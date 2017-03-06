@@ -8,8 +8,6 @@ module Blog
   , TagCount
   ) where
 
-import Prelude
-
 type Page =
   { number :: Int
   , size   :: Int
