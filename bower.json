@@ -27,7 +27,12 @@
     "purescript-pux": "^7.0.0",
     "purescript-datetime": "^2.1.0",
     "purescript-enums": "^2.0.1",
-    "purescript-markdown": "^8.0.1"
+    "purescript-markdown": "^8.0.1",
+    "purescript-affjax": "^3.0.2",
+    "purescript-uri": "^2.0.0",
+    "purescript-pathy": "^3.0.2",
+    "purescript-argonaut-core": "^2.0.1",
+    "purescript-argonaut-codecs": "^2.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^2.0.0"

@@ -89,7 +89,8 @@ CLOSED: [2017-02-19 Sun 12:47]
 CLOSED: [2017-03-05 Sun 16:04]
 *** DONE Glue together header, body into one complete view. No API yet
 CLOSED: [2017-03-05 Sun 16:04]
-*** TODO Create API experiment
+*** DONE Create API experiment
+CLOSED: [2017-03-06 Mon 20:47]
 *** TODO Create API + Pux experiment
 *** TODO Migrate API + Pux experiment into main source
 *** TODO Research how where API attaches hierarchy
