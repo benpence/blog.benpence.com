@@ -91,7 +91,8 @@ CLOSED: [2017-03-05 Sun 16:04]
 CLOSED: [2017-03-05 Sun 16:04]
 *** DONE Create API experiment
 CLOSED: [2017-03-06 Mon 20:47]
-*** TODO Create API + Pux experiment
+*** DONE Create API + Pux experiment
+CLOSED: [2017-03-07 Tue 21:56]
 *** TODO Migrate API + Pux experiment into main source
 *** TODO Research how where API attaches hierarchy
 ** TODO Add frontend cache
