@@ -6,7 +6,7 @@ module Blog.TagCounts
   , view
   ) where
 
-import Blog (Tag, TagCount)
+import Blog.Types (Tag, TagCount)
 import Pux.Html (Html)
 import Prelude
 

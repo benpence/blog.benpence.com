@@ -6,7 +6,7 @@ module Blog.TagList
   , view
   ) where
 
-import Blog (Tag)
+import Blog.Types (Tag)
 import Pux.Html (Html)
 import Prelude
 

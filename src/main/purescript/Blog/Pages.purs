@@ -5,7 +5,7 @@ module Blog.Pages
   , view
   ) where
 
-import Blog (Page)
+import Blog.Types (Page)
 import Data.Array ((:))
 import Pux.Html (Html)
 import Prelude

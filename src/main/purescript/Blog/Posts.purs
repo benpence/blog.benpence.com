@@ -7,7 +7,7 @@ module Blog.Posts
   , viewContent
   ) where
 
-import Blog (Post, PostId, Tag)
+import Blog.Types (Post, PostId, Tag)
 import Data.Enum (class BoundedEnum)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe, fromMaybe)

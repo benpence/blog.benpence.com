@@ -5,7 +5,7 @@ module Blog.Body
   , view
   ) where
 
-import Blog (Page, Post, PostId, Tag, TagCount)
+import Blog.Types (Page, Post, PostId, Tag, TagCount)
 import Pux.Html (Html)
 import Prelude
 

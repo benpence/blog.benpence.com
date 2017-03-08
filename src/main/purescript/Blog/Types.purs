@@ -1,4 +1,4 @@
-module Blog
+module Blog.Types
   ( Page
   , Post
   , PostId(..)
