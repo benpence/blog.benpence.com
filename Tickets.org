@@ -93,7 +93,9 @@ CLOSED: [2017-03-05 Sun 16:04]
 CLOSED: [2017-03-06 Mon 20:47]
 *** DONE Create API + Pux experiment
 CLOSED: [2017-03-07 Tue 21:56]
-*** TODO Migrate API + Pux experiment into main source
+*** DONE Migrate API + Pux experiment into main source
+CLOSED: [2017-03-07 Tue 22:46]
+*** TODO Connect API into UI
 *** TODO Research how where API attaches hierarchy
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client

@@ -19,8 +19,8 @@ type Post =
   { id            :: PostId
   , author        :: User
   , title         :: String
-  , createdMillis :: Int
-  , tags          :: Array String
+  , createdMillis :: Number
+  , tags          :: Array Tag
   , content       :: String
   }
 

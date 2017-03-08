@@ -18,7 +18,6 @@ import Prelude
 import Data.DateTime                             as DateTime
 import Data.DateTime.Instant                     as Instant
 import Data.Enum                                 as Enum
-import Data.Int                                  as Int
 import Data.String                               as String
 import Blog.TagList                              as TagList
 import Blog.Util.Markdown                        as Markdown
@@ -44,9 +43,6 @@ view state =
 
 viewPost :: Post -> Html Action
 viewPost post =
-  let
-    tags = map ({ name: _ }) post.tags
-  in
     H.div [A.className "post"] [
         viewTitle [
             H.a [E.onClick (const (PostClicked post.id))] [H.text post.title]
@@ -58,7 +54,7 @@ viewPost post =
                 H.text (fromMaybe "" (viewTimestamp post.createdMillis))
             ],
 
-            map fromTagListAction (TagList.view { tags: tags })
+            map fromTagListAction (TagList.view { tags: post.tags })
         ],
 
         viewContent post.content
@@ -78,7 +74,7 @@ viewContent content =
     H.div [A.className "post-content"] [handleRenderedMd (Markdown.toPux content)]
     
 
-viewTimestamp :: Int -> Maybe String
+viewTimestamp :: Number -> Maybe String
 viewTimestamp epochMillis =
   let
     leadingZeroes :: String -> String
@@ -98,7 +94,6 @@ viewTimestamp epochMillis =
     millisToDate = map (DateTime.date <<< Instant.toDateTime)
         <<< Instant.instant
         <<< Milliseconds
-        <<< Int.toNumber
   in
     map dateToString (millisToDate epochMillis)
 
