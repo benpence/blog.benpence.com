@@ -75,7 +75,8 @@ CLOSED: [2016-09-08 Thu 22:55]
 CLOSED: [2016-09-10 Sat 20:23]
 *** DONE Connect frontend client API to UI
 CLOSED: [2016-09-10 Sat 20:23]
-** DOING Purescript primitives
+** DONE Purescript primitives
+CLOSED: [2017-03-07 Tue 22:47]
 *** DONE Halogen MVP
 CLOSED: [2017-01-10 Tue 22:52]
 *** DONE Lens
@@ -95,7 +96,8 @@ CLOSED: [2017-03-06 Mon 20:47]
 CLOSED: [2017-03-07 Tue 21:56]
 *** DONE Migrate API + Pux experiment into main source
 CLOSED: [2017-03-07 Tue 22:46]
-*** TODO Connect API into UI
+*** DONE Connect API into UI
+CLOSED: [2017-03-08 Wed 22:19]
 *** TODO Research how where API attaches hierarchy
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client

@@ -1,6 +1,6 @@
 module Blog.Body
   ( Action(..)
-  , State
+  , State(..)
   , init
   , view
   ) where
@@ -9,6 +9,7 @@ import Blog.Types (Page, Post, PostId, Tag, TagCount)
 import Pux.Html (Html)
 import Prelude
 
+import Blog.Header                               as Header
 import Blog.Pages                                as Pages
 import Blog.Posts                                as Posts
 import Blog.TagCounts                            as TagCounts
@@ -56,8 +57,26 @@ init :: State
 init = Empty
 
 view :: State -> Html Action
-view Empty = H.div [] []
-view (PostsContent { searchTerms, posts, page, totalPages }) =
+view state =
+    H.div [A.className "app container-fluid"] [
+        map fromHeaderAction (Header.view (headerState state)),
+        viewContent state
+    ]
+
+headerState :: State -> Header.State
+headerState Empty = Header.init
+headerState (PostContent _) = Header.SearchTerms ""
+headerState (PostsContent { searchTerms }) =
+    if searchTerms == ""
+    then Header.Selected Header.postsButton
+    else Header.SearchTerms searchTerms
+headerState (TagContent _) = Header.SearchTerms ""
+headerState (TagsContent _) = Header.Selected Header.tagsButton
+headerState (AboutContent _) = Header.Selected Header.aboutButton
+
+viewContent :: State -> Html Action
+viewContent Empty = H.div [] []
+viewContent (PostsContent { searchTerms, posts, page, totalPages }) =
   let
     pageAction pageNumber = ShowPosts
         { searchTerms: searchTerms
@@ -77,13 +96,13 @@ view (PostsContent { searchTerms, posts, page, totalPages }) =
         ]
     ]
 
-view (PostContent { post }) = singleRowCol [
+viewContent (PostContent { post }) = singleRowCol [
         H.div [A.className "posts"] [
             map fromPostsAction (Posts.view (Posts.init [post]))
         ]
     ]
 
-view (TagContent { tag, posts, page, totalPages }) =
+viewContent (TagContent { tag, posts, page, totalPages }) =
   let
     pageAction pageNumber = ShowTag
         { tag: tag
@@ -97,14 +116,14 @@ view (TagContent { tag, posts, page, totalPages }) =
       map fromPostsAction (Posts.view (Posts.init posts))
     ]
 
-view (TagsContent tagCounts) =
+viewContent (TagsContent tagCounts) =
     singleRowCol [
         H.div [A.className "tag-list list-group"] [
           map fromTagAction (TagCounts.view (TagCounts.init tagCounts))
         ]
     ]
 
-view (AboutContent { content }) =
+viewContent (AboutContent { content }) =
     singleRowCol [
         Posts.viewTitle [H.span [] [H.text "About"]],
         map fromPostsAction (Posts.viewContent content)
@@ -126,3 +145,12 @@ fromPostsAction (Posts.LinkClicked url) = ShowTags
 -- TODO: pageSize
 fromTagAction :: TagCounts.Action -> Action
 fromTagAction (TagCounts.Clicked tag) = ShowTag { tag: tag, page: Pages.one 10 }
+
+-- TODO: pageSize
+fromHeaderAction :: Header.Action -> Action
+fromHeaderAction (Header.Clicked b) | b == Header.tagsButton = ShowTags
+fromHeaderAction (Header.Clicked b) | b == Header.aboutButton = ShowAbout
+fromHeaderAction (Header.Clicked _)                           =
+    ShowPosts { searchTerms: "", page: Pages.one 10 }
+fromHeaderAction (Header.NewSearchTerms searchTerms) =
+    ShowPosts { searchTerms: searchTerms, page: Pages.one 10 }

@@ -13,7 +13,6 @@ import Prelude
 import Data.List                                 as List
 import Pux.Html                                  as H
 import Pux.Html.Attributes                       as A
-import Pux.Html.Events                           as E
 import Text.Markdown.SlamDown                    as S
 import Text.Markdown.SlamDown.Parser             as Parser
 
@@ -33,12 +32,16 @@ toPux markdown =
 
 blockToPux :: S.Block String -> Html Action
 blockToPux S.Rule = H.hr [] []
-blockToPux (S.LinkReference label url) = H.link [A.href url] [H.text label]
+blockToPux (S.LinkReference label url) = H.a [A.href url] [H.text label]
 -- Evaluating blocks unsupported
 blockToPux (S.CodeBlock _ lines) =
-    H.pre [A.className "codeblock"] [
-        H.text (foldl (\a b -> a <> "\n" <> b) "" lines)
-    ]
+  let
+    code =
+        if (List.length lines) == 1
+        then map H.text (toArray lines)
+        else [H.text (foldl (\a b -> a <> "\n" <> b) "" lines)]
+  in
+    H.pre [A.className "codeblock"] code
 blockToPux (S.Lst (S.Bullet  _) items) =
     H.ul [] (map listItemToPux (toArray (map toArray items)))
 blockToPux (S.Lst (S.Ordered _) items) =
@@ -62,10 +65,10 @@ inlineToPux inline = case inline of
     (S.FormField _ _ _) -> H.div [] []
     (S.Image inlines url) -> H.img [A.src url] (inlinesToPux inlines)
     (S.Link inlines (S.InlineLink url)) ->
-        H.link [E.onClick (const (Clicked url))] (inlinesToPux inlines)
+        H.a [A.href url] (inlinesToPux inlines)
+    -- TODO: Why is this maybe?
     (S.Link inlines (S.ReferenceLink maybeUrl)) ->
-        H.link [E.onClick (const (Clicked (fromMaybe "" maybeUrl)))] (inlinesToPux inlines)
-
+        H.a [A.href (fromMaybe "" maybeUrl)] (inlinesToPux inlines)
     -- Evaluating code unsupported
     (S.Code _ code) -> H.span [A.className "code"] [H.text code]
     (S.Strong inlines) -> H.strong [] (inlinesToPux inlines)

@@ -27,7 +27,10 @@ init title totalPages currentPage = { title, totalPages, currentPage }
 view :: forall a. (Int -> a) -> State -> Html a
 view pageAction state =
   let
-    pages = Array.range 1 state.totalPages
+    pages =
+        if state.totalPages > 1
+        then Array.range 1 state.totalPages
+        else [1]
   in
     H.nav [] [
         viewPages pageAction state.title state.currentPage pages

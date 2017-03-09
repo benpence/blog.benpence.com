@@ -30,7 +30,7 @@ update (Clicked tag) state = state
 
 view :: State -> Html Action
 view state =
-    H.div [A.className "tag-list", A.className "list-group"] (
+    H.div [A.className "tag-list list-group"] (
         map viewTagCount (Array.sortBy (comparing _.tag.name) state.tagCounts)
     )
 
@@ -39,8 +39,7 @@ viewTagCount tagCount =
   let
     attributes =
         [ E.onClick (const (Clicked tagCount.tag))
-        , A.className "tag-count"
-        , A.className "list-group-item"
+        , A.className "tag-count list-group-item"
         ]
 
     tagCountString = tagCount.tag.name <> " (" <> show tagCount.count <> ")"

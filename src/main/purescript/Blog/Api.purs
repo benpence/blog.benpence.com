@@ -30,7 +30,7 @@ type Client =
   , postsByTag  :: forall r. Tag -> Page -> Aff (ajax :: AJAX | r) (Result Posts)
   , postById    :: forall r. PostId -> Aff (ajax :: AJAX | r) (Result Post)
   , tagCounts   :: forall r. Aff (ajax :: AJAX | r) (Result (Array TagCount))
-  , about       :: forall r. Aff (ajax :: AJAX | r) String
+  , about       :: forall r. Aff (ajax :: AJAX | r) (Result String)
   }
 
 remoteClient :: Client
@@ -92,14 +92,14 @@ remoteTagCounts =
     resp <- Http.request Method.GET url Nothing
     pure (map (map toTagCount) (decodeResult (resp.response)))
 
-remoteAbout :: forall r. Aff (ajax :: AJAX | r) String
+remoteAbout :: forall r. Aff (ajax :: AJAX | r) (Result String)
 remoteAbout =
   let
     path = P.rootDir </> P.dir "static" </> P.file "About.md"
 
     url = Http.path (Right path) []
   in
-    map _.response (Http.request Method.GET url Nothing)
+    map (Right <<< _.response) (Http.request Method.GET url Nothing)
 
 type Result a = Either (Array String) a
 

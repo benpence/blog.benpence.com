@@ -35,10 +35,7 @@ renderButton :: Tag -> Html Action
 renderButton tag =
   let
     attrs =
-        [ A.className "post-tag"
-        , A.className "btn"
-        , A.className "btn-default"
-        , A.className "btn-xs"
+        [ A.className "post-tag btn btn-default btn-xs"
         , E.onClick (const (Clicked tag))
         ]
   in

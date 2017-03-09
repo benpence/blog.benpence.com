@@ -1,10 +1,12 @@
 module Blog.Header
   ( Action(..)
   , Button(..)
-  , State
+  , State(..)
   , buttons
   , init
-  , update
+  , aboutButton
+  , postsButton
+  , tagsButton
   , view
   ) where
 
@@ -46,34 +48,28 @@ buttons = [postsButton, tagsButton, aboutButton]
 searchPlaceholder :: String
 searchPlaceholder = "Search for posts"
 
-update :: Action -> State -> State
-update (Clicked button) _ = Selected button
-update (NewSearchTerms searchTerms) _ =
-    if searchTerms == ""
-    then init
-    else SearchTerms searchTerms
-
 view :: State -> Html Action
 view header =
-    H.nav [A.className "row", A.className "navbar", A.className "navbar-default"] [
-        H.div [A.className "navbar-header"] [
-            H.ul [A.className "nav", A.className "navbar-nav"] (map (\button ->
+    H.nav [A.className "row navbar navbar-default"] [
+        H.div [A.className "navbar-header", A.style [Tuple "margin-right" "15px"]] [
+            H.ul [A.className "nav navbar-nav"] (map (\button ->
                 viewButton button (isActive header button))
             buttons) 
         ],
 
         H.div [A.className "navbar-form"] [
             H.div [A.className "form-group", A.style [Tuple "display" "inline"]] [
-                H.div [A.className "input-group", A.style [Tuple "display" "table"]] [
+                H.div [A.className "input-group", A.style [Tuple "display" "table", Tuple "left-margin" "15px"]] [
                     H.span [A.className "input-group-addon", A.style [Tuple "width" "1%"]] [
-                        H.span [A.className "glyphicon", A.className "glyphicon-search"] []
+                        H.span [A.className "glyphicon glyphicon-search"] []
                     ],
 
                     H.input [
                         A.type_ "text",
                         A.className "form-control",
                         A.value (searchBarText header),
-                        E.onChange (NewSearchTerms <<< _.target.value)
+                        E.onChange (NewSearchTerms <<< _.target.value),
+                        A.placeholder searchPlaceholder
                     ] []
                 ]
             ]
@@ -81,8 +77,8 @@ view header =
     ]
 
 viewButton :: Button -> Boolean -> Html Action
-viewButton button@(Button { name }) isActive =
-    if isActive then
+viewButton button@(Button { name }) isActive' =
+    if isActive' then
         H.li [A.className "active"] [
            H.a [] [
                 H.text name
