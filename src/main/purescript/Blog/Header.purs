@@ -51,7 +51,7 @@ searchPlaceholder = "Search for posts"
 view :: State -> Html Action
 view header =
     H.nav [A.className "row navbar navbar-default"] [
-        H.div [A.className "navbar-header", A.style [Tuple "margin-right" "15px"]] [
+        H.div [A.className "navbar-header", A.style [Tuple "marginRight" "15px"]] [
             H.ul [A.className "nav navbar-nav"] (map (\button ->
                 viewButton button (isActive header button))
             buttons) 
@@ -59,7 +59,7 @@ view header =
 
         H.div [A.className "navbar-form"] [
             H.div [A.className "form-group", A.style [Tuple "display" "inline"]] [
-                H.div [A.className "input-group", A.style [Tuple "display" "table", Tuple "left-margin" "15px"]] [
+                H.div [A.className "input-group", A.style [Tuple "display" "table", Tuple "leftMargin" "15px"]] [
                     H.span [A.className "input-group-addon", A.style [Tuple "width" "1%"]] [
                         H.span [A.className "glyphicon glyphicon-search"] []
                     ],
