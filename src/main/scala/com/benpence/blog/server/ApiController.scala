@@ -2,6 +2,8 @@ package com.benpence.blog.server
 
 import com.benpence.blog.model.{PostId, UserId}
 import com.benpence.blog.service.ApiService
+import com.benpence.blog.util.Markdown
+import com.benpence.blog.util.PrimitiveEnrichments._
 import com.twitter.finagle.http.Response
 import com.twitter.finatra.http.Controller
 import com.twitter.finatra.http.response.ResponseBuilder
@@ -51,6 +53,14 @@ class ApiController(apiService: ApiService) extends Controller {
   get("/api/tagcounts") { request: TagCountsRequest =>
     apiService
       .tagCounts
+      .map(Successful(_))
+      .toResponse(response)
+  }
+
+  get("/api/about") { request: AboutRequest =>
+    apiService
+      .about
+      .flatMap { aboutContent => Markdown.parse(aboutContent).toFuture }
       .map(Successful(_))
       .toResponse(response)
   }

@@ -19,13 +19,18 @@ trait ApiService {
    * How many posts are tagged by each tag
    */
   def tagCounts: Future[Seq[TagCount]]
+  /*
+   * Content for About page
+   */
+  def about: Future[String]
 }
 
 class StoreApiService(
   val postStore: PostStore,
   val userStore: UserStore,
   val tagStore: TagStore,
-  val taggedPostsStore: TaggedPostsStore
+  val taggedPostsStore: TaggedPostsStore,
+  val aboutContent: String
 ) extends ApiService {
 
   override def searchPosts(queryString: String, pageSize: Int, page: Int): Future[ApiPosts] = {
@@ -72,6 +77,8 @@ class StoreApiService(
         Future.collect(taggedPosts)
       }
   }
+
+  override def about: Future[String] = Future.value(aboutContent)
 
   private[service] def paginated[A](list: Seq[A], pageSize: Int, page: Int): (Int, Seq[A]) = {
     val items = list.drop((page - 1) * pageSize).take(pageSize)

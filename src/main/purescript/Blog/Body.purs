@@ -5,7 +5,7 @@ module Blog.Body
   , view
   ) where
 
-import Blog.Types (Page, Post, PostId, Tag, TagCount)
+import Blog.Types (Component, Page, Post, PostId, Tag, TagCount)
 import Pux.Html (Html)
 import Prelude
 
@@ -50,7 +50,7 @@ data State
       }
     | TagsContent (Array TagCount)
     | AboutContent
-      { content :: String
+      { content :: Array Component
       }
 
 init :: State
@@ -126,8 +126,7 @@ viewContent (TagsContent tagCounts) =
 viewContent (AboutContent { content }) =
     singleRowCol [
         Posts.viewTitle [H.span [] [H.text "About"]],
-        --map fromPostsAction (Posts.viewContent content)
-        H.text "PLACEHOLDER"
+        map fromPostsAction (Posts.viewContent content)
     ]
 
 singleRowCol :: forall a. Array (Html a) -> Html a

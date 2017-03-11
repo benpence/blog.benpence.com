@@ -32,3 +32,6 @@ case class PostRequest(
 
 case class TagCountsRequest(
 )
+
+case class AboutRequest(
+)

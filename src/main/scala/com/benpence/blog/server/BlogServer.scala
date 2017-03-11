@@ -4,6 +4,7 @@ import com.benpence.blog.model.{Tag, TagId}
 import com.benpence.blog.service.StoreApiService
 import com.benpence.blog.store._
 import com.benpence.blog.util.UriLoader
+import com.benpence.blog.util.ResourceLoader
 import com.benpence.blog.util.ArgsEnrichments._
 import com.benpence.blog.util.PrimitiveEnrichments._
 import com.twitter.finagle.http.{Request, Response}
@@ -33,6 +34,7 @@ object MainBlogServer {
 
   val PostsFileArg = "file.posts"
   val UsersFileArg = "file.users"
+  val AboutResource = "/web/static/About.md"
 
   def main(argv: Array[String]): Unit = {
     val (blogArgs, finatraArgs) = (argv.takeWhile(_ != "--"), argv.dropWhile(_ != "--").drop(1))
@@ -83,13 +85,17 @@ object MainBlogServer {
         }
     }
 
+    val aboutContent = ResourceLoader.load(AboutResource).get
+
     val server = new BlogServer(
       new ApiController(
         new StoreApiService(
           postStore,
           userStore,
           tagStore,
-          taggedPostsStore)
+          taggedPostsStore,
+          aboutContent
+        )
       )
     )
 

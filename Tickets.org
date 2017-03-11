@@ -101,11 +101,12 @@ CLOSED: [2017-03-07 Tue 22:46]
 CLOSED: [2017-03-08 Wed 22:19]
 *** DONE Research how where API attaches hierarchy
 CLOSED: [2017-03-10 Fri 18:58]
-** DOING Process markdown parsing server-side
+** DONE Process markdown parsing server-side
+CLOSED: [2017-03-10 Fri 20:18]
 *** DONE Parse server side
 CLOSED: [2017-03-10 Fri 19:47]
-*** TODO Add route for about
-*** TODO Cache parsing results server side
+*** DONE Add route for about
+CLOSED: [2017-03-10 Fri 20:18]
 ** TODO Delete elm
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
@@ -118,6 +119,8 @@ CLOSED: [2017-03-10 Fri 19:47]
 ** After thoughts
 *** DONE Reduce property-based FilesTest duration
 CLOSED: [2016-09-01 Thu 22:23]
+*** TODO Fix frontend pages title of tag showing
+*** TODO Cache parsing results server side
 *** TODO Add revision number for posts, UI, API
 Use "The Title: Revision 1.md" and "The Title: Revision 2.md" or something similar
 *** TODO Blog Server feature tests

@@ -6,7 +6,7 @@ module Blog.View
   , view
   ) where
 
-import Blog.Types (Post)
+import Blog.Types (Component, Post)
 import Control.Monad.Aff (Aff)
 import Data.Either (Either(..))
 import Network.HTTP.Affjax (AJAX)
@@ -45,7 +45,7 @@ contactApi client Body.ShowTags = do
     pure (map Body.TagsContent result)
 contactApi client Body.ShowAbout =
   let
-    toBody :: String -> Body.State
+    toBody :: Array Component -> Body.State
     toBody content = Body.AboutContent { content: content }
   in do
     result <- client.about
