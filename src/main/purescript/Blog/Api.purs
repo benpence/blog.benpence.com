@@ -5,7 +5,7 @@ module Blog.Api
   , remoteClient
   ) where
 
-import Blog.Types (Page, Post, PostId, Tag, TagCount, User)
+import Blog.Types (Component(..), Page, Post, PostId, Tag, TagCount, User)
 import Control.Monad.Aff (Aff)
 import Data.Argonaut.Core (Json, JObject)
 import Data.Argonaut.Decode (class DecodeJson, (.?), decodeJson)
@@ -103,6 +103,12 @@ remoteAbout =
 
 type Result a = Either (Array String) a
 
+newtype ApiComponent = ApiComponent
+  { component :: String
+  , children :: Array ApiComponent
+  , attributes :: Array (Tuple String String)
+  }
+
 newtype ApiTagCount = ApiTagCount
     { tag   :: String
     , count :: Int
@@ -117,11 +123,16 @@ newtype ApiPost = ApiPost
     , title :: String
     , createdMillis :: Number
     , tags :: Array String
-    , content :: String
+    , content :: Array ApiComponent
     }
 newtype ApiPosts = ApiPosts
     { totalPages :: Int
     , posts :: Array ApiPost
+    }
+
+toComponent :: ApiComponent -> Component
+toComponent (ApiComponent r) = Component r
+    { children = map toComponent r.children
     }
 
 toTagCount :: ApiTagCount -> TagCount
@@ -136,6 +147,7 @@ toPost :: ApiPost -> Post
 toPost (ApiPost r) = r
     { author = toUser r.author
     , tags = map ({ name: _ }) r.tags
+    , content = map toComponent r.content
     }
 
 toPosts :: ApiPosts -> Posts
@@ -168,6 +180,13 @@ decodeResult json =
   in
     altResults results errors
 
+instance decodeApi :: DecodeJson ApiComponent where
+    decodeJson json = do
+        obj        <- decodeJson json
+        component  <- obj .? "component"
+        children   <- obj .? "children"
+        attributes <- obj .? "attributes"
+        pure (ApiComponent { component, children, attributes })
 
 instance decodeApiTagCount :: DecodeJson ApiTagCount where
     decodeJson json = do

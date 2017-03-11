@@ -1,5 +1,6 @@
 module Blog.Types
-  ( Page
+  ( Component(..)
+  , Page
   , Post
   , PostId(..)
   , User
@@ -7,6 +8,8 @@ module Blog.Types
   , Tag
   , TagCount
   ) where
+
+import Data.Tuple (Tuple)
 
 type Page =
   { number :: Int
@@ -21,7 +24,7 @@ type Post =
   , title         :: String
   , createdMillis :: Number
   , tags          :: Array Tag
-  , content       :: String
+  , content       :: Array Component
   }
 
 type UserId = Int
@@ -38,4 +41,10 @@ type Tag =
 type TagCount =
   { tag :: Tag
   , count :: Int
+  }
+
+newtype Component = Component
+  { component :: String
+  , children :: Array Component
+  , attributes :: Array (Tuple String String)
   }

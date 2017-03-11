@@ -7,6 +7,7 @@ lazy val versions = new {
   val finatra = "2.1.6"
   val finagle = "6.35.0"
   val jackson = "2.7.2"
+  val knockoff = "0.8.3"
   val mockito = "1.8.5"
   val scalaCheck = "1.12.5"
   val scalaTest = "2.2.4"
@@ -23,6 +24,7 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.core"       %  "jackson-databind"        % versions.jackson,
   "com.fasterxml.jackson.dataformat" %  "jackson-dataformat-yaml" % versions.jackson,
   "com.fasterxml.jackson.module"     %% "jackson-module-scala"    % versions.jackson,
+  "com.tristanhunt"                  %% "knockoff"                % versions.knockoff,
   "com.twitter.finatra"              %% "finatra-http"            % versions.finatra,
   "com.twitter.finatra"              %% "finatra-httpclient"      % versions.finatra,
   "com.twitter"                      %% "finagle-mysql"           % versions.finagle,

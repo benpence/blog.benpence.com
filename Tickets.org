@@ -81,7 +81,8 @@ CLOSED: [2017-03-07 Tue 22:47]
 CLOSED: [2017-01-10 Tue 22:52]
 *** DONE Lens
 CLOSED: [2017-01-24 Tue 19:27]
-** TODO Convert to Purescript + Pux
+** DONE Convert to Purescript + Pux
+CLOSED: [2017-03-10 Fri 18:59]
 *** DONE Tag
 CLOSED: [2017-02-19 Sun 12:47]
 *** DONE Header
@@ -98,7 +99,14 @@ CLOSED: [2017-03-07 Tue 21:56]
 CLOSED: [2017-03-07 Tue 22:46]
 *** DONE Connect API into UI
 CLOSED: [2017-03-08 Wed 22:19]
-*** TODO Research how where API attaches hierarchy
+*** DONE Research how where API attaches hierarchy
+CLOSED: [2017-03-10 Fri 18:58]
+** DOING Process markdown parsing server-side
+*** DONE Parse server side
+CLOSED: [2017-03-10 Fri 19:47]
+*** TODO Add route for about
+*** TODO Cache parsing results server side
+** TODO Delete elm
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading

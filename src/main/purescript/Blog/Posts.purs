@@ -7,9 +7,8 @@ module Blog.Posts
   , viewContent
   ) where
 
-import Blog.Types (Post, PostId, Tag)
+import Blog.Types (Component, Post, PostId, Tag)
 import Data.Enum (class BoundedEnum)
-import Data.Either (Either(..))
 import Data.Maybe (Maybe, fromMaybe)
 import Data.Time.Duration (Milliseconds(..))
 import Pux.Html (Html)
@@ -28,7 +27,6 @@ import Pux.Html.Events                           as E
 data Action
     = PostClicked PostId
     | TagClicked Tag
-    | LinkClicked String
 
 type State =
     { posts :: Array Post
@@ -63,15 +61,9 @@ viewPost post =
 viewTitle :: forall a. Array (Html a) -> Html a
 viewTitle = H.h1 [A.className "post-title"]
 
-viewContent :: String -> Html Action
+viewContent :: Array Component -> Html Action
 viewContent content =
-  let
-    handleRenderedMd :: Either String (Html Markdown.Action) -> Html Action
-    -- TODO: Better response
-    handleRenderedMd (Left _) = H.div [] []
-    handleRenderedMd (Right html) = map fromMarkdownAction html
-  in
-    H.div [A.className "post-content"] [handleRenderedMd (Markdown.toPux content)]
+    H.div [A.className "post-content"] (map Markdown.toPux content)
     
 
 viewTimestamp :: Number -> Maybe String
@@ -99,6 +91,3 @@ viewTimestamp epochMillis =
 
 fromTagListAction :: TagList.Action -> Action
 fromTagListAction (TagList.Clicked tag) = TagClicked tag
-
-fromMarkdownAction :: Markdown.Action -> Action
-fromMarkdownAction (Markdown.Clicked url) = LinkClicked url

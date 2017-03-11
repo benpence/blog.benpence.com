@@ -1,5 +1,7 @@
 package com.benpence.blog.model
 
+import com.benpence.blog.util.Markdown
+
 case class UserId(asLong: Long) extends AnyVal
 case class User(
   id: UserId,
@@ -29,11 +31,12 @@ case class Post(
 object ApiPost {
   def from(post: Post, author: ApiUser): ApiPost = ApiPost(
     post.id,
-    author: ApiUser,
-    post.title: String,
-    post.createdMillis: Long,
-    post.tags: Set[String],
-    post.content: String
+    author,
+    post.title,
+    post.createdMillis,
+    post.tags,
+    // TODO: Cache this
+    Markdown.parse(post.content).get
   )
 }
 case class ApiPost(
@@ -42,7 +45,7 @@ case class ApiPost(
   title: String,
   createdMillis: Long,
   tags: Set[String],
-  content: String
+  content: Seq[Markdown.Component]
 )
 
 case class ApiPosts(

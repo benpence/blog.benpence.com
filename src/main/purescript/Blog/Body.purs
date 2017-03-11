@@ -126,7 +126,8 @@ viewContent (TagsContent tagCounts) =
 viewContent (AboutContent { content }) =
     singleRowCol [
         Posts.viewTitle [H.span [] [H.text "About"]],
-        map fromPostsAction (Posts.viewContent content)
+        --map fromPostsAction (Posts.viewContent content)
+        H.text "PLACEHOLDER"
     ]
 
 singleRowCol :: forall a. Array (Html a) -> Html a
@@ -139,8 +140,6 @@ fromPostsAction :: Posts.Action -> Action
 fromPostsAction (Posts.PostClicked postId) = ShowPost { postId: postId }
 -- TODO: pageSize
 fromPostsAction (Posts.TagClicked tag) = ShowTag { tag: tag, page: Pages.one 10 }
--- TODO: Open page on link clicked
-fromPostsAction (Posts.LinkClicked url) = ShowTags
 
 -- TODO: pageSize
 fromTagAction :: TagCounts.Action -> Action
