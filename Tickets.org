@@ -107,7 +107,8 @@ CLOSED: [2017-03-10 Fri 20:18]
 CLOSED: [2017-03-10 Fri 19:47]
 *** DONE Add route for about
 CLOSED: [2017-03-10 Fri 20:18]
-** TODO Delete elm
+** DONE Delete elm
+CLOSED: [2017-03-11 Sat 07:53]
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading
