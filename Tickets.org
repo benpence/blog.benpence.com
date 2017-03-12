@@ -101,21 +101,24 @@ CLOSED: [2017-03-07 Tue 22:46]
 CLOSED: [2017-03-08 Wed 22:19]
 *** DONE Research how where API attaches hierarchy
 CLOSED: [2017-03-10 Fri 18:58]
+** DONE Delete elm
+CLOSED: [2017-03-11 Sat 07:53]
 ** DONE Process markdown parsing server-side
-CLOSED: [2017-03-10 Fri 20:18]
+CLOSED: [2017-03-12 Sun 10:24]
 *** DONE Parse server side
 CLOSED: [2017-03-10 Fri 19:47]
 *** DONE Add route for about
 CLOSED: [2017-03-10 Fri 20:18]
-** DONE Delete elm
-CLOSED: [2017-03-11 Sat 07:53]
+*** DONE Client side parse attributes
+CLOSED: [2017-03-12 Sun 10:23]
+** TODO Add unit tests against events
+*** DOING State changes
+*** TODO Research how other people do view tests
 ** TODO Add frontend cache
 *** TODO Api.Client as part af Model. Client methods yield new client
 *** TODO Make server-side API changes for selective reading
 *** TODO Time/space-based expiration?
-** TODO Add unit tests against events
-*** TODO State changes
-*** TODO Research how other people do view tests
+** TODO Frontend routes
 ** TODO Better handling of failed fetches
 ** After thoughts
 *** DONE Reduce property-based FilesTest duration

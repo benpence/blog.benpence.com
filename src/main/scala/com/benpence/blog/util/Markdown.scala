@@ -26,7 +26,7 @@ object Markdown {
         Component(s"h$level", spans.map(spanToComponent))
       case LinkDefinition(id, url, title, _) =>
         val title_ = title.getOrElse("")
-        Component("link", Seq.empty, Seq("id" -> id, "url" -> url, "title" -> title_))
+        Component("link", Seq.empty, Seq("id" -> id, "href" -> url, "alt" -> title_))
       case Blockquote(children, _) =>
         Component("blockquote", children.map(blockToComponent))
       case CodeBlock(text, _) =>
@@ -60,7 +60,7 @@ object Markdown {
         Component("emphasis", children.map(spanToComponent))
       case Link(children, url, title) =>
         val title_ = title.getOrElse("")
-        Component("a", children.map(spanToComponent), Seq("href" -> url, "title" -> title_))
+        Component("a", children.map(spanToComponent), Seq("href" -> url, "alt" -> title_))
       case IndirectLink(children, definition) =>
         val link = blockToComponent(definition)
         val componentChildren = children.map(spanToComponent)

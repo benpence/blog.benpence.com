@@ -3,29 +3,26 @@ module Blog.Util.Markdown
   ) where
 
 import Blog.Types (Component(..))
-import Data.Foldable (find, foldl)
-import Data.List (List)
+import Data.Foldable (find)
 import Data.Maybe (fromMaybe)
 import Data.Tuple (Tuple(..))
 import Pux.Html (Html)
 import Prelude
 
 import Data.Array                                as Array
-import Data.List                                 as List
 import Data.Tuple                                as Tuple
-import Pux                                       as Pux
 import Pux.Html                                  as H
 import Pux.Html.Attributes                       as A
 
 toPux :: forall a. Component -> Html a
 toPux (Component { component, children, attributes }) =
   let
-    attributes' = map toAttribute (Array.filter (("content" /= _) <<< Tuple.fst) attributes)
+    attributes' = join (map toAttribute (Array.filter (("content" /= _) <<< Tuple.fst) attributes))
     children' = map toPux children
 
     content = fromMaybe "" (map Tuple.snd (find (("content" == _) <<< Tuple.fst) attributes))
 
-    puxConstructor :: forall a. Array (H.Attribute a) -> Array (Html a) -> Html a
+    puxConstructor :: Array (H.Attribute a) -> Array (Html a) -> Html a
     puxConstructor = case component of
         "p"          -> H.p
         "h1"         -> H.h1
@@ -52,5 +49,9 @@ toPux (Component { component, children, attributes }) =
   in
     puxConstructor attributes' children'
 
-toAttribute :: forall a. Tuple String String -> H.Attribute a
-toAttribute (Tuple key val) = A.alt "hhh"
+toAttribute :: forall a. Tuple String String -> Array (H.Attribute a)
+toAttribute (Tuple "id"      val) = [A.id_ val]
+toAttribute (Tuple "href"    val) = [A.href val]
+toAttribute (Tuple "alt"     val) = [A.alt val]
+toAttribute (Tuple "src"     val) = [A.src val]
+toAttribute _                     = []
